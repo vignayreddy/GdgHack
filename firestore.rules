@@ -1,54 +1,26 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+
     // ===============================================================
     // Assumed Data Model
     // ===============================================================
     //
     // Collection: users
-    // Document ID: userId (UID)
+    // Document ID: {userId}
     // Fields:
-    //   - uid: string (required)
-    //   - email: string (required)
-    //   - displayName: string (optional)
-    //   - photoURL: string (optional)
-    //   - role: string (required, enum: ['youth', 'mentor', 'admin'])
-    //   - createdAt: timestamp (required)
-    //
-    // Collection: moods
-    // Document ID: auto-generated
-    // Fields:
-    //   - uid: string (required)
-    //   - mood: string (required)
-    //   - note: string (optional)
-    //   - timestamp: timestamp (required)
-    //
-    // Collection: help_requests
-    // Document ID: auto-generated
-    // Fields:
-    //   - uid: string (optional)
-    //   - message: string (required)
-    //   - category: string (optional)
-    //   - status: string (required, enum: ['pending', 'in-progress', 'resolved'])
-    //   - timestamp: timestamp (required)
-    //
-    // Collection: mentors
-    // Document ID: auto-generated
-    // Fields:
-    //   - name: string (required)
-    //   - role: string (required)
-    //   - specialty: string (required)
-    //   - rating: number (optional)
-    //   - reviews: int (optional)
-    //   - image: string (optional)
-    //   - uid: string (optional)
+    //   - uid: string (required, immutable) - The unique identifier for the user.
+    //   - email: string (required, immutable) - The user's email address.
+    //   - displayName: string (optional) - The user's display name.
+    //   - role: string (required, enum: ["admin", "user"]) - The user's role.
+    //   - createdAt: timestamp (required, immutable) - When the profile was created.
     //
     // ===============================================================
 
     // ===============================================================
     // Helper Functions
     // ===============================================================
-    
+
     function isAuthenticated() {
       return request.auth != null;
     }
@@ -57,50 +29,57 @@ service cloud.firestore {
       return isAuthenticated() && request.auth.uid == userId;
     }
 
-    function isDocOwner() {
-      return isAuthenticated() && request.auth.uid == resource.data.uid;
-    }
-
     function isAdmin() {
-      return isAuthenticated() && 
+      return isAuthenticated() &&
         (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' ||
-         (request.auth.token.email == "vr7225274@gmail.com" && request.auth.token.email_verified == true));
+          (request.auth.token.email == "vignayreddymuduganti@gmail.com" && request.auth.token.email_verified == true) ||
+          (request.auth.token.email == "vr7225274@gmail.com" && request.auth.token.email_verified == true));
     }
-
-    function isValidEmail(email) {
-      return email is string && email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
-    }
-
-    function isValidUrl(url) {
-      return url is string && (url.matches("^https://.*") || url.matches("^http://.*"));
-    }
-
-    // ===============================================================
-    // Domain Validators
-    // ===============================================================
 
     function isValidUser(data) {
-      return data.keys().hasAll(['uid', 'email', 'role', 'createdAt']) &&
-             data.uid == request.auth.uid &&
-             isValidEmail(data.email) &&
-             data.role in ['youth', 'mentor', 'admin'] &&
+      return data.keys().hasAll(['uid', 'email', 'role']) &&
+             data.uid is string &&
+             data.email is string &&
+             data.role in ['admin', 'user'];
+    }
+
+    function isValidStreak(data) {
+      return data.keys().hasAll(['uid', 'currentStreak', 'lastActive', 'history']) &&
+             data.uid is string &&
+             data.currentStreak is number &&
+             data.lastActive is timestamp &&
+             data.history is list;
+    }
+
+    function isValidNotification(data) {
+      return data.keys().hasAll(['userId', 'title', 'message', 'read', 'createdAt']) &&
+             data.userId is string &&
+             data.title is string &&
+             data.message is string &&
+             data.read is bool &&
+             data.createdAt is timestamp;
+    }
+
+    function isValidHelpRequest(data) {
+      return data.keys().hasAll(['userId', 'category', 'message', 'createdAt']) &&
+             data.userId is string &&
+             data.category is string &&
+             data.message is string &&
              data.createdAt is timestamp;
     }
 
     function isValidMood(data) {
-      return data.keys().hasAll(['uid', 'mood', 'timestamp']) &&
-             data.uid == request.auth.uid &&
-             data.mood is string && data.mood.size() > 0 && data.mood.size() < 50 &&
-             data.timestamp is timestamp &&
-             (!('note' in data) || (data.note is string && data.note.size() < 500));
+      return data.keys().hasAll(['userId', 'mood', 'timestamp']) &&
+             data.userId is string &&
+             data.mood is string &&
+             data.timestamp is timestamp;
     }
 
-    function isValidHelpRequest(data) {
-      return data.keys().hasAll(['message', 'status', 'timestamp']) &&
-             data.message is string && data.message.size() > 0 && data.message.size() < 2000 &&
-             data.status in ['pending', 'in-progress', 'resolved'] &&
-             data.timestamp is timestamp &&
-             (!('uid' in data) || data.uid == request.auth.uid);
+    function isValidMentor(data) {
+      return data.keys().hasAll(['name', 'expertise', 'available']) &&
+             data.name is string &&
+             data.expertise is string &&
+             data.available is bool;
     }
 
     // ===============================================================
@@ -109,25 +88,52 @@ service cloud.firestore {
 
     match /users/{userId} {
       allow read: if isOwner(userId) || isAdmin();
-      allow create: if isOwner(userId) && isValidUser(request.resource.data) && (request.resource.data.role == 'youth' || isAdmin());
-      allow update: if isOwner(userId) && isValidUser(request.resource.data) && (request.resource.data.role == resource.data.role || isAdmin());
+      allow create: if isAuthenticated() && 
+                      isValidUser(request.resource.data) && 
+                      request.resource.data.uid == request.auth.uid &&
+                      (request.resource.data.role == 'user' || isAdmin());
+      allow update: if isAuthenticated() && 
+                      isValidUser(request.resource.data) &&
+                      (
+                        (isOwner(userId) && request.resource.data.role == resource.data.role) || 
+                        isAdmin()
+                      );
+      allow delete: if isAdmin();
     }
 
-    match /moods/{moodId} {
-      allow read: if isDocOwner() || isAdmin();
-      allow create: if isAuthenticated() && isValidMood(request.resource.data);
-      allow delete: if isDocOwner() || isAdmin();
+    match /streaks/{userId} {
+      allow read: if isOwner(userId) || isAdmin();
+      allow create, update: if isOwner(userId) && isValidStreak(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    match /notifications/{notificationId} {
+      allow read: if (isAuthenticated() && request.auth.uid == resource.data.userId) || isAdmin();
+      allow create: if isAdmin() || (isAuthenticated() && request.auth.uid == request.resource.data.userId && isValidNotification(request.resource.data));
+      allow update: if (isAuthenticated() && request.auth.uid == resource.data.userId) || isAdmin();
+      allow delete: if isAdmin();
     }
 
     match /help_requests/{requestId} {
-      allow read: if isAdmin() || (isAuthenticated() && resource.data.uid == request.auth.uid);
-      allow create: if isValidHelpRequest(request.resource.data);
-      allow update: if isAdmin();
+      allow read: if isAdmin() || (isAuthenticated() && request.auth.uid == resource.data.userId);
+      allow create: if isAuthenticated() && request.auth.uid == request.resource.data.userId && isValidHelpRequest(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    match /moods/{moodId} {
+      allow read: if isAdmin() || (isAuthenticated() && request.auth.uid == resource.data.userId);
+      allow create: if isAuthenticated() && request.auth.uid == request.resource.data.userId && isValidMood(request.resource.data);
+      allow delete: if isAdmin();
     }
 
     match /mentors/{mentorId} {
-      allow read: if true;
+      allow read: if isAuthenticated();
       allow write: if isAdmin();
+    }
+
+    // Default deny
+    match /{path=**} {
+      allow read, write: if false;
     }
   }
 }

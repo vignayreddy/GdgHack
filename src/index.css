@@ -1,60 +1,17 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Inter:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
 @import "tailwindcss";
 
 @theme {
   --font-sans: 'Inter', sans-serif;
-  --font-serif: 'Cormorant Garamond', serif;
-  
-  --color-brand-primary: #5A5A40; /* Olive Green */
-  --color-brand-bg: #f5f5f0; /* Warm Off-white */
-  --color-brand-surface: #ffffff; /* White */
-  --color-brand-border: #e2e8f0; /* Slate 200 */
-  --color-brand-text: #1e293b; /* Slate 800 */
-  --color-brand-muted: #64748b; /* Slate 500 */
+  --font-serif: 'Playfair Display', serif;
 }
 
 body {
   font-family: var(--font-sans);
-  background-color: var(--color-brand-bg);
-  color: var(--color-brand-text);
+  background-color: #fafaf9; /* stone-50 */
+  color: #1c1917; /* stone-900 */
 }
 
 .serif {
   font-family: var(--font-serif);
-}
-
-.card {
-  background-color: var(--color-brand-surface);
-  border-radius: 24px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-  border: 1px solid var(--color-brand-border);
-}
-
-.btn-primary {
-  background-color: var(--color-brand-primary);
-  color: #ffffff;
-  border-radius: 9999px;
-  padding: 0.75rem 1.5rem;
-  font-weight: 600;
-  transition: all 0.2s ease;
-}
-
-.btn-primary:hover {
-  opacity: 0.9;
-  transform: translateY(-1px);
-  box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
-}
-
-.btn-secondary {
-  background-color: transparent;
-  border: 1px solid var(--color-brand-primary);
-  color: var(--color-brand-primary);
-  border-radius: 9999px;
-  padding: 0.75rem 1.5rem;
-  font-weight: 600;
-  transition: all 0.2s ease;
-}
-
-.btn-secondary:hover {
-  background-color: rgba(16, 185, 129, 0.1);
 }

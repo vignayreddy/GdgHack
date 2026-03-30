@@ -1,89 +1,20 @@
-<p align="center">
-  <img src="https://img.shields.io/badge/Resilient%20Roots-Youth%20Mental%20Health%20Platform-4CAF7D?style=for-the-badge&logo=heart&logoColor=white" />
-</p>
+<div align="center">
+<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
+</div>
 
-<h1 align="center">🌱 Resilient Roots</h1>
+# Run and deploy your AI Studio app
 
-<p align="center">
-  <strong>A safe, stigma-free digital platform for adolescent mental wellbeing — built for and by youth.</strong>
-</p>
+This contains everything you need to run your app locally.
 
-<p align="center">
-  <img src="https://img.shields.io/badge/React-20232A?style=flat-square&logo=react&logoColor=61DAFB"/>
-  <img src="https://img.shields.io/badge/Node.js-339933?style=flat-square&logo=nodedotjs&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Gemini%20API-4285F4?style=flat-square&logo=google&logoColor=white"/>
-  <img src="https://img.shields.io/badge/License-MIT-green?style=flat-square"/>
-  <img src="https://img.shields.io/badge/CodeNyx%2038-GDG%20CVR-orange?style=flat-square"/>
-</p>
+View your app in AI Studio: https://ai.studio/apps/5055aefa-bbe3-45ab-906f-66e94355f70f
 
-<p align="center">
-  <em>"Asking for help is strength, not fear."</em>
-</p>
+## Run Locally
 
----
+**Prerequisites:**  Node.js
 
-## 📌 The Problem
 
-Young people in India — and globally — face a silent mental health crisis:
-
-- **50%** of all mental health conditions begin before age 14  
-- **90%** of affected youth in low-income settings receive **zero care**  
-- **1 in 7** adolescents globally experience a mental health condition  
-
-The biggest barrier isn't the absence of solutions. It's **stigma**.  
-Most teenagers never reach out because no environment ever made it feel safe to ask.
-
-**Resilient Roots changes that.**
-
----
-
-## 💡 What We Built
-
-Resilient Roots is a full-stack youth mental health support platform with three interconnected modules:
-
-### 🧒 Youth Portal
-- **Daily mood check-in** — private, anonymous, never shared  
-- **Curated resource library** — breathing exercises, journaling prompts, guided audio, and articles  
-- **Peer mentor discovery** — mentors by specialization (exam stress, family, grief)
-
-### 💬 Anonymous Safe Chat
-- End-to-end encrypted conversations  
-- **Zero identity required** (random anonymous ID)  
-- Real-time peer mentor support  
-- Crisis helplines always visible  
-
-### 📊 NGO Wellbeing Dashboard
-- Live mood trend tracking  
-- Concern category breakdown  
-- **Early warning system** (low mood, distress keywords, sudden drops)  
-- Zone-level clustering for targeted outreach  
-
----
-
-## 🛠️ Tech Stack
-
-| Layer | Technology |
-|------|-----------|
-| Frontend | React.js |
-| Backend | Node.js + Express |
-| AI / NLP | Google Gemini API |
-| Auth | Anonymous session tokens |
-
----
-
-## 🚀 Getting Started
-
-### Prerequisites
-- Node.js (v18 or above)
-- npm
-- Gemini API key from https://aistudio.google.com
-
-### Installation
-
-```bash
-git clone https://github.com/vignayreddy/GdgHack.git
-cd GdgHack
-npm install
-cp .env.example .env.local
-# Add GEMINI_API_KEY
-npm run dev
+1. Install dependencies:
+   `npm install`
+2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
+3. Run the app:
+   `npm run dev`
