@@ -1,0 +1,76 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile information",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string" },
+        "displayName": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "role": { "type": "string", "enum": ["youth", "mentor", "admin"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "role"]
+    },
+    "Mood": {
+      "title": "Mood",
+      "description": "Daily mood check-in",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "mood": { "type": "string" },
+        "note": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "mood", "timestamp"]
+    },
+    "HelpRequest": {
+      "title": "HelpRequest",
+      "description": "Anonymous help request",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "message": { "type": "string" },
+        "category": { "type": "string" },
+        "status": { "type": "string", "enum": ["pending", "in-progress", "resolved"] },
+        "timestamp": { "type": "string", "format": "date-time" }
+      },
+      "required": ["message", "timestamp", "status"]
+    },
+    "Mentor": {
+      "title": "Mentor",
+      "description": "Mentor profile information",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "role": { "type": "string" },
+        "specialty": { "type": "string" },
+        "rating": { "type": "number" },
+        "reviews": { "type": "integer" },
+        "image": { "type": "string" },
+        "uid": { "type": "string" }
+      },
+      "required": ["name", "role", "specialty"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profiles"
+    },
+    "/moods/{moodId}": {
+      "schema": "Mood",
+      "description": "Mood check-ins"
+    },
+    "/help_requests/{requestId}": {
+      "schema": "HelpRequest",
+      "description": "Help requests"
+    },
+    "/mentors/{mentorId}": {
+      "schema": "Mentor",
+      "description": "Mentor profiles"
+    }
+  }
+}
