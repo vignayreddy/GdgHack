@@ -1,0 +1,197 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: users
+    // Document ID: {userId}
+    // Fields:
+    //   - uid: string (required, immutable) - The unique identifier for the user.
+    //   - email: string (required, immutable) - The user's email address.
+    //   - displayName: string (optional) - The user's display name.
+    //   - role: string (required, enum: ["admin", "user"]) - The user's role.
+    //   - createdAt: timestamp (required, immutable) - When the profile was created.
+    //
+    // ===============================================================
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() &&
+        (
+          request.auth.token.email == "vignayreddymuduganti@gmail.com" ||
+          request.auth.token.email == "vr7225274@gmail.com" ||
+          (exists(/databases/$(database)/documents/users/$(request.auth.uid)) && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin')
+        );
+    }
+
+    function isValidUser(data) {
+      return data.keys().hasAll(['uid', 'email', 'role']) &&
+             data.uid is string &&
+             data.email is string &&
+             data.role in ['admin', 'user'];
+    }
+
+    function isValidStreak(data) {
+      return data.keys().hasAll(['uid', 'currentStreak', 'lastActive', 'history']) &&
+             data.uid is string &&
+             data.currentStreak is number &&
+             data.lastActive is timestamp &&
+             data.history is list;
+    }
+
+    function isValidNotification(data) {
+      return data.keys().hasAll(['userId', 'title', 'message', 'read', 'createdAt']) &&
+             data.userId is string &&
+             data.title is string &&
+             data.message is string &&
+             data.read is bool &&
+             data.createdAt is timestamp;
+    }
+
+    function isValidHelpRequest(data) {
+      return data.keys().hasAll(['message', 'status', 'createdAt']) &&
+             data.message is string &&
+             data.status is string &&
+             data.createdAt is timestamp &&
+             (!('userId' in data) || data.userId is string) &&
+             (!('category' in data) || data.category is string);
+    }
+
+    function isValidMood(data) {
+      return data.keys().hasAll(['userId', 'mood', 'timestamp']) &&
+             data.userId is string &&
+             data.mood is string &&
+             data.timestamp is timestamp &&
+             (!('value' in data) || data.value is number);
+    }
+
+    function isValidMentor(data) {
+      return data.keys().hasAll(['name', 'expertise', 'available']) &&
+             data.name is string &&
+             data.expertise is string &&
+             data.available is bool;
+    }
+
+    function isValidSleep(data) {
+      return data.keys().hasAll(['userId', 'hours', 'quality', 'timestamp']) &&
+             data.userId is string &&
+             data.hours is number &&
+             data.quality in ['Poor', 'Fair', 'Good', 'Excellent'] &&
+             data.timestamp is timestamp;
+    }
+
+    function isValidStress(data) {
+      return data.keys().hasAll(['userId', 'level', 'timestamp']) &&
+             data.userId is string &&
+             data.level is number &&
+             data.level >= 1 && data.level <= 10 &&
+             data.timestamp is timestamp;
+    }
+
+    function isValidPost(data) {
+      return data.keys().hasAll(['userId', 'authorName', 'content', 'createdAt']) &&
+             data.userId is string &&
+             data.authorName is string &&
+             data.content is string &&
+             data.content.size() < 5000 &&
+             data.createdAt is timestamp &&
+             (!('likes' in data) || data.likes is list) &&
+             (!('dislikes' in data) || data.dislikes is list) &&
+             (!('deleted' in data) || data.deleted is bool);
+    }
+
+    // ===============================================================
+    // Rules
+    // ===============================================================
+
+    match /test/connection {
+      allow read: if true;
+    }
+
+    match /users/{userId} {
+      allow read: if isOwner(userId) || isAdmin();
+      allow create: if isAuthenticated() && 
+                      isValidUser(request.resource.data) && 
+                      request.resource.data.uid == request.auth.uid &&
+                      (request.resource.data.role == 'user' || isAdmin());
+      allow update: if isAuthenticated() && 
+                      isValidUser(request.resource.data) &&
+                      (
+                        (isOwner(userId) && request.resource.data.role == resource.data.role) || 
+                        isAdmin()
+                      );
+      allow delete: if isAdmin();
+    }
+
+    match /streaks/{userId} {
+      allow read: if isOwner(userId) || isAdmin();
+      allow create, update: if isOwner(userId) && isValidStreak(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    match /notifications/{notificationId} {
+      allow read: if (isAuthenticated() && request.auth.uid == resource.data.userId) || isAdmin();
+      allow create: if isAdmin() || (isAuthenticated() && request.auth.uid == request.resource.data.userId && isValidNotification(request.resource.data));
+      allow update: if (isAuthenticated() && request.auth.uid == resource.data.userId) || isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    match /help_requests/{requestId} {
+      allow read: if isAdmin() || (isAuthenticated() && request.auth.uid == resource.data.userId);
+      allow create: if (isAuthenticated() || !('userId' in request.resource.data)) && isValidHelpRequest(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    match /moods/{moodId} {
+      allow read: if isAdmin() || (isAuthenticated() && request.auth.uid == resource.data.userId);
+      allow create: if isAuthenticated() && request.auth.uid == request.resource.data.userId && isValidMood(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    match /mentors/{mentorId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+
+    match /sleep/{sleepId} {
+      allow read: if isAdmin() || (isAuthenticated() && request.auth.uid == resource.data.userId);
+      allow create: if isAuthenticated() && request.auth.uid == request.resource.data.userId && isValidSleep(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    match /stress/{stressId} {
+      allow read: if isAdmin() || (isAuthenticated() && request.auth.uid == resource.data.userId);
+      allow create: if isAuthenticated() && request.auth.uid == request.resource.data.userId && isValidStress(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    match /posts/{postId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated() && request.auth.uid == request.resource.data.userId && isValidPost(request.resource.data);
+      allow update: if isAuthenticated() && (
+        (request.auth.uid == resource.data.userId && request.resource.data.diff(resource.data).affectedKeys().hasAny(['content', 'deleted'])) ||
+        (request.resource.data.diff(resource.data).affectedKeys().hasAny(['likes', 'dislikes']))
+      );
+      allow delete: if isAdmin() || (isAuthenticated() && request.auth.uid == resource.data.userId);
+    }
+
+    // Default deny
+    match /{path=**} {
+      allow read, write: if false;
+    }
+  }
+}
