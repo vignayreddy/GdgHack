@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Dependencies
 node_modules/
 .npm
@@ -33,3 +34,13 @@ ngo_dashboard_plan.md
 task.md
 implementation_plan.md
 walkthrough.md
+=======
+node_modules/
+build/
+dist/
+coverage/
+.DS_Store
+*.log
+.env*
+!.env.example
+>>>>>>> c386689621845b620bb930585abddc54b9500577

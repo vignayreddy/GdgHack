@@ -1,0 +1,44 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Inter', sans-serif;
+  --font-serif: 'Playfair Display', serif;
+  --color-sage-50: #f5f3ff; /* Very light violet */
+  --color-sage-100: #ede9fe; /* Light violet */
+  --color-sage-200: #ddd6fe; /* Soft violet */
+  --color-sage-600: #4f46e5; /* Indigo */
+  --color-sage-700: #3730a3; /* Deep indigo */
+  --color-sage-800: #1e1b4b; /* Midnight indigo */
+  --color-cream: #f8fafc; /* Very light blue-gray */
+  --color-stone-50: #f1f5f9;
+  --color-stone-100: #e2e8f0;
+  --color-stone-200: #cbd5e1;
+  --color-stone-900: #0f172a; /* Slate 900 */
+  --color-accent: #06b6d4; /* Cyan/Teal */
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-cream);
+  color: var(--color-stone-900);
+}
+
+.serif {
+  font-family: var(--font-serif);
+}
+
+.glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.card-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.08);
+}

@@ -1,0 +1,157 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "User profile data including role and activity tracking.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "Unique identifier for the user." },
+        "email": { "type": "string", "description": "User's email address." },
+        "displayName": { "type": "string", "description": "User's display name." },
+        "role": { "type": "string", "enum": ["admin", "user"], "description": "User's role." },
+        "bio": { "type": "string", "description": "User's biography." },
+        "age": { "type": "number", "description": "User's age." },
+        "gender": { "type": "string", "description": "User's gender." },
+        "avatar": { "type": "string", "description": "URL to user's avatar image." },
+        "interests": { "type": "array", "items": { "type": "string" }, "description": "User's interests." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "When the profile was created." },
+        "lastLogin": { "type": "string", "format": "date-time", "description": "When the user last logged in." }
+      },
+      "required": ["uid", "email", "role"]
+    },
+    "Streak": {
+      "title": "Streak",
+      "description": "User activity streak data.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "User ID." },
+        "currentStreak": { "type": "number", "description": "Current consecutive active days." },
+        "lastActive": { "type": "string", "format": "date-time", "description": "Last activity timestamp." },
+        "history": { "type": "array", "items": { "type": "string" }, "description": "List of active dates (YYYY-MM-DD)." }
+      },
+      "required": ["uid", "currentStreak", "lastActive"]
+    },
+    "Notification": {
+      "title": "Notification",
+      "description": "User notifications for inactivity or updates.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "User ID." },
+        "title": { "type": "string", "description": "Notification title." },
+        "message": { "type": "string", "description": "Notification message." },
+        "read": { "type": "boolean", "description": "Whether the notification has been read." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "When the notification was created." }
+      },
+      "required": ["userId", "title", "message", "read", "createdAt"]
+    },
+    "HelpRequest": {
+      "title": "HelpRequest",
+      "description": "User help requests for specific categories.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "User ID (optional for anonymous)." },
+        "message": { "type": "string", "description": "Request message." },
+        "status": { "type": "string", "enum": ["pending", "resolved"], "description": "Request status." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "When the request was created." }
+      },
+      "required": ["message", "status", "createdAt"]
+    },
+    "Mood": {
+      "title": "Mood",
+      "description": "User mood check-ins.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "User ID." },
+        "mood": { "type": "string", "description": "Mood value." },
+        "timestamp": { "type": "string", "format": "date-time", "description": "When the mood was recorded." }
+      },
+      "required": ["userId", "mood", "timestamp"]
+    },
+    "Mentor": {
+      "title": "Mentor",
+      "description": "Available mentors for the NGO.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "description": "Mentor name." },
+        "expertise": { "type": "string", "description": "Expertise area." },
+        "available": { "type": "boolean", "description": "Availability status." }
+      },
+      "required": ["name", "expertise", "available"]
+    },
+    "Sleep": {
+      "title": "Sleep",
+      "description": "User sleep tracking data.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "User ID." },
+        "hours": { "type": "number", "description": "Hours of sleep." },
+        "quality": { "type": "string", "enum": ["Poor", "Fair", "Good", "Excellent"], "description": "Quality of sleep." },
+        "timestamp": { "type": "string", "format": "date-time", "description": "When the sleep was recorded." }
+      },
+      "required": ["userId", "hours", "quality", "timestamp"]
+    },
+    "Stress": {
+      "title": "Stress",
+      "description": "User stress level tracking.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "User ID." },
+        "level": { "type": "number", "description": "Stress level (1-10)." },
+        "note": { "type": "string", "description": "Optional note about stress triggers." },
+        "timestamp": { "type": "string", "format": "date-time", "description": "When the stress was recorded." }
+      },
+      "required": ["userId", "level", "timestamp"]
+    },
+    "Post": {
+      "title": "Post",
+      "description": "Community posts or discussions.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "User ID." },
+        "authorName": { "type": "string", "description": "Author's display name." },
+        "content": { "type": "string", "description": "Post content." },
+        "likes": { "type": "number", "description": "Number of likes." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "When the post was created." }
+      },
+      "required": ["userId", "authorName", "content", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "User profile documents."
+    },
+    "/streaks/{userId}": {
+      "schema": "Streak",
+      "description": "User streak tracking documents."
+    },
+    "/notifications/{notificationId}": {
+      "schema": "Notification",
+      "description": "User notification documents."
+    },
+    "/help_requests/{requestId}": {
+      "schema": "HelpRequest",
+      "description": "User help request documents."
+    },
+    "/moods/{moodId}": {
+      "schema": "Mood",
+      "description": "User mood check-in documents."
+    },
+    "/mentors/{mentorId}": {
+      "schema": "Mentor",
+      "description": "Mentor documents."
+    },
+    "/sleep/{sleepId}": {
+      "schema": "Sleep",
+      "description": "User sleep tracking documents."
+    },
+    "/stress/{stressId}": {
+      "schema": "Stress",
+      "description": "User stress level documents."
+    },
+    "/posts/{postId}": {
+      "schema": "Post",
+      "description": "Community post documents."
+    }
+  }
+}
