@@ -1,4 +1,5 @@
 import Store from './store.js';
+import { GROQ_API_KEY } from './config.js';
 
 /**
  * MindBridgeOverview handles the 2x2 grid dashboard, real-time sync,
@@ -9,7 +10,7 @@ class MindBridgeOverview {
     this.data = { moodData: [], sleepData: [], stressData: [], journalEntries: [] };
     this.unsubscribe = null;
     this.lastAiSync = 0; // Throttle AI calls
-    this.aiApiKey = "YOUR_GROQ_API_KEY";
+    this.aiApiKey = GROQ_API_KEY;
     this.initialized = false;
   }
 

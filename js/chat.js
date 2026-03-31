@@ -1,10 +1,12 @@
 /**
- * MindBridgeChat manages the AI-powered mental health assistant.
+ * NyxWellChat manages the AI-powered mental health assistant.
  * Powered by Groq (LLAMA 3).
  */
+import { GROQ_API_KEY } from './config.js';
+
 class NyxWellChat {
   constructor() {
-    this.apiKey = "YOUR_GROQ_API_KEY";
+    this.apiKey = GROQ_API_KEY;
     this.apiUrl = "https://api.groq.com/openai/v1/chat/completions";
     this.model = "llama3-8b-8192";
     

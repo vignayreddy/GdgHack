@@ -3,9 +3,11 @@
  * Voice Analysis: Web Speech API + Groq sentiment scoring
  * Facial Analysis: face-api.js expression mapping (free, browser-native)
  */
+import { GROQ_API_KEY } from './config.js';
+
 class NyxAIEngine {
   constructor() {
-    this.aiApiKey = "YOUR_GROQ_API_KEY";
+    this.aiApiKey = GROQ_API_KEY;
     this.recognition = null;
     this.faceStream = null;
     this.faceInterval = null;

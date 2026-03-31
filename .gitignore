@@ -25,9 +25,11 @@ Thumbs.db
 .env
 .env.local
 .env.*.local
+js/config.js
 
 # Documentation / Drafts (optional, but cleaning up for push)
 ngo_dashboard_plan.md
+
 task.md
 implementation_plan.md
 walkthrough.md
