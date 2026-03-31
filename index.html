@@ -1,0 +1,2267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NyxWell — Youth Mental Wellbeing | Zen Brutalism — 2026</title>
+  <meta name="description" content="A safe, anonymous space for Indian youth to check in, find support, and connect with peer mentors.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/chat.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+<body class="is-guest">
+
+  <!-- ── GUEST NAVIGATION (TOP) ── -->
+  <nav class="nav-guest">
+    <div class="nav-logo" data-page="home">Nyx<span>Well</span></div>
+    <div style="display: flex; align-items:center; gap: 15px;">
+      <button id="nav-login-btn" class="nav-cta" data-page="auth-selection">LOG IN</button>
+    </div>
+  </nav>
+
+  <!-- ── USER NAVIGATION (SIDEBAR) ── -->
+  <aside class="nav-sidebar">
+    <div class="sidebar-logo brand" data-page="dashboard">Nyx<span>Well</span></div>
+    
+    <div class="sidebar-links">
+      <div class="sidebar-link active" data-page="overview">🏠 Overview</div>
+      <div class="sidebar-link" data-page="mood-tracker">📊 Mood Tracker</div>
+      <div class="sidebar-link" data-page="sleep-tracker">😴 Sleep Tracker</div>
+      <div class="sidebar-link" data-page="stress-tracker">⚡ Stress Tracker</div>
+      <div class="sidebar-link" data-page="journal">📝 Journal</div>
+      <div class="sidebar-link" data-page="community">👥 Community</div>
+      <div class="sidebar-link" data-page="resources">📚 Resources Library</div>
+      <div class="sidebar-link" data-page="activity">🧘 Activity Hub</div>
+      <div class="sidebar-link" data-page="settings">⚙️ Settings</div>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="user-profile">
+        <div class="user-avatar" id="sidebar-avatar">U</div>
+        <div style="overflow: hidden;">
+          <div id="nav-user-span" class="mono" style="font-weight: 700; white-space: nowrap; text-overflow: ellipsis; font-size: 13px;">User</div>
+          <div class="mono" style="font-size: 10px; opacity: 0.6;">Online</div>
+        </div>
+      </div>
+      <button id="nav-logout-btn" class="btn btn-secondary" style="width: 100%; padding: 10px;">LOG OUT</button>
+    </div>
+  </aside>
+  <!-- ── NGO NAVIGATION (SIDEBAR) (NEW GLOBAL) ── -->
+  <aside class="nav-sidebar nav-sidebar-ngo" style="border-right: var(--border); flex-direction: column; padding: 20px; position: fixed; top: 0; left: 0; bottom: 0; width: 280px; background: var(--cream); z-index: 200;">
+    <div class="sidebar-logo brand" data-page="ngo-dashboard">Nyx<span>Well</span> <span class="mono" style="font-size: 10px; opacity: 0.5;">NGO</span></div>
+    
+    <div class="sidebar-links">
+      <div class="sidebar-link active" data-page="ngo-dashboard">🏠 Overview</div>
+      <div class="sidebar-link" data-page="ngo-cases">📂 Case Management</div>
+      <div class="sidebar-link" data-page="ngo-volunteers">🤝 Peer Mentors</div>
+      <div class="sidebar-link" data-page="ngo-analytics">📊 Deep Analytics</div>
+      <div class="sidebar-link" data-page="ngo-impact-map">🌍 Global Impact Map</div>
+      <div class="sidebar-link" data-page="ngo-reports">📋 Impact Reports</div>
+      <div class="sidebar-link" data-page="ngo-directory">📞 Resource Directory</div>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="user-profile">
+        <div class="user-avatar" style="background: var(--sage); color: white;">N</div>
+        <div style="overflow: hidden;">
+          <div id="ngo-nav-name" class="mono" style="font-weight: 700; white-space: nowrap; text-overflow: ellipsis; font-size: 12px;">NGO Staff</div>
+          <div class="mono" style="font-size: 10px; opacity: 0.6;">Verified Org</div>
+        </div>
+      </div>
+      <button id="nav-logout-btn" class="btn btn-secondary" style="width: 100%; padding: 10px; border-color: var(--sage);">LOG OUT</button>
+    </div>
+  </aside>
+
+  <!-- ── MAIN CONTENT AREA ── -->
+  <main class="main-content">
+
+    <!-- ══════════════════════════════════ HOME (LANDING) ══════════════════════════════════ -->
+    <div id="page-home" class="page active">
+      <section class="hero">
+        <div class="hero-left">
+          <div class="hero-eyebrow">Youth Mental Wellbeing Platform</div>
+          <h1 class="hero-title">Asking for help is <em>strength,</em> not weakness.</h1>
+          <p class="hero-subtitle">A safe, anonymous space for young people to check in, find support, and connect with peers — without fear of judgment.</p>
+          <div class="hero-actions">
+            <button class="btn btn-primary" data-page="auth-selection">🌿 GET STARTED</button>
+            <button class="btn btn-secondary" data-page="resources">LEARN MORE →</button>
+          </div>
+          <div class="hero-stats">
+            <div class="stat">
+              <div class="stat-num">100%</div>
+              <div class="stat-label">Anonymous</div>
+            </div>
+            <div class="stat">
+              <div class="stat-num">24/7</div>
+              <div class="stat-label">Support</div>
+            </div>
+          </div>
+        </div>
+        <div class="hero-visual">
+          <div class="brutal-card" style="padding: 0; overflow: hidden; margin-bottom: 20px;">
+            <img src="assets/hero.png" alt="NyxWell Supportive Environment" style="width: 100%; display: block;">
+          </div>
+          <div class="brutal-card" style="margin-bottom: 20px;">
+            <div class="form-label">How are you feeling today?</div>
+            <div class="mood-grid" style="grid-template-columns: 1fr 1fr 1fr;">
+              <div class="mood-btn" style="padding: 10px;"><span class="mood-emoji">😔</span> Stressed</div>
+              <div class="mood-btn" style="padding: 10px;"><span class="mood-emoji">😊</span> Calm</div>
+              <div class="mood-btn" style="padding: 10px;"><span class="mood-emoji">😐</span> Okay</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- NYXPULSE: LIVE PLATFORM ACTIVITY -->
+      <section class="pulse-bar">
+        <div class="pulse-item">
+          <div class="pulse-dot"></div>
+          <div>
+            <div class="pulse-val">8,402+</div>
+            <div class="pulse-label">Anonymous Check-ins</div>
+          </div>
+        </div>
+        <div class="pulse-item">
+          <div class="pulse-dot" style="background: var(--coral);"></div>
+          <div>
+            <div class="pulse-val">420</div>
+            <div class="pulse-label">Certified Mentors</div>
+          </div>
+        </div>
+        <div class="pulse-item">
+          <div class="pulse-dot"></div>
+          <div>
+            <div class="pulse-val">100%</div>
+            <div class="pulse-label">Data Privacy (RSA-4096)</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="features-section">
+        <div class="section-center">
+          <div class="hero-eyebrow">NyxWell Benefits</div>
+          <h2 class="section-title">Designed for Indian Youth</h2>
+          <p class="hero-subtitle">Simple, private, and always within reach.</p>
+        </div>
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon">🌿</div>
+            <div class="feature-title">Daily Mood Check-in</div>
+            <div class="feature-desc">Log how you feel every day anonymously. Build awareness of your patterns.</div>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">🤝</div>
+            <div class="feature-title">Peer Mentorship</div>
+            <div class="feature-desc">Connect with trained volunteers who understand your journey.</div>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">📚</div>
+            <div class="feature-title">Curated Resources</div>
+            <div class="feature-desc">Articles, exercises, and helplines hand-picked by professionals.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- THE JOURNEY: UNIQUE NYX.TERMINAL GUIDE -->
+      <section class="journey-section">
+        <div class="section-center">
+          <div class="hero-eyebrow">The Sanctuary Architecture</div>
+          <h2 class="section-title">Your Path to Wellbeing</h2>
+          <p class="hero-subtitle">Simple, secure, and strictly anonymous. Here is exactly what happens when you enter the sanctuary.</p>
+        </div>
+
+        <div class="journey-grid">
+          <!-- STEP 1 -->
+          <div class="journey-card">
+            <div class="card-header-digital">
+              <div class="title">[ Nyx.Express ]</div>
+              <div class="badge">STEP 01</div>
+            </div>
+            <div class="journey-card-body">
+              <h3 class="step-title">Express Digitally</h3>
+              <p class="step-desc">Select from our palette of 20+ specialized mood characters and 15+ situational tags. Map your emotions without the pressure of finding "right words" immediately.</p>
+            </div>
+          </div>
+
+          <!-- STEP 2 -->
+          <div class="journey-card">
+            <div class="card-header-digital">
+              <div class="title">[ Nyx.Insight ]</div>
+              <div class="badge">STEP 02</div>
+            </div>
+            <div class="journey-card-body">
+              <h3 class="step-title">AI Insight Loop</h3>
+              <p class="step-desc">Our ZenAI engine anonymously cross-references your check-in with community archetypes to provide an instant 'Wellbeing Snapshot' and curated self-care rituals.</p>
+            </div>
+          </div>
+
+          <!-- STEP 3 -->
+          <div class="journey-card">
+            <div class="card-header-digital">
+              <div class="title">[ Nyx.Sanctuary ]</div>
+              <div class="badge">STEP 03</div>
+            </div>
+            <div class="journey-card-body">
+              <h3 class="step-title">The Safe Haven</h3>
+              <p class="step-desc">Connect to a live, end-to-end encrypted session with a peer or professional. Every session self-destructs upon logout—ensuring no trace remains on any device.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PRIVACY BLUEPRINT: SECURITY DETAILS -->
+      <section class="privacy-section">
+        <div class="section-center">
+          <h2 class="section-title">Privacy-First Architecture</h2>
+          <p class="hero-subtitle">We don't just promise privacy; we built it into our core code. No phone numbers, no tracking, no footprints.</p>
+        </div>
+        
+        <div class="privacy-grid">
+          <div class="privacy-node">
+             <div class="node-icon">🛡️</div>
+             <h3 class="node-title">Ephemeral Identity</h3>
+             <p class="node-desc">Each visit generates a unique, one-time identifier. Your data is never tied to a real-world name or account.</p>
+          </div>
+          <div class="privacy-node">
+             <div class="node-icon">📡</div>
+             <h3 class="node-title">E2E Encrypted</h3>
+             <p class="node-desc">All conversations use military-grade encryption. Even we cannot read the contents of your support sessions.</p>
+          </div>
+          <div class="privacy-node">
+             <div class="node-icon">⚖️</div>
+             <h3 class="node-title">Siloed Data</h3>
+             <p class="node-desc">Organizational staff only see aggregated trends (e.g. "Age 16 stress is up 5%"), never specific individual logs.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- STUDENT VOICES: ANONYMOUS PROFILES -->
+      <section class="voices-section">
+        <div class="section-center">
+          <div class="hero-eyebrow">Community Pulse</div>
+          <h2 class="section-title">Whispers from the Sanctuary</h2>
+        </div>
+
+        <div class="voices-grid">
+          <div class="voice-card">
+            <div class="voice-card-quote">"Finally a place where I didn't have to explain myself to my parents first. Being anonymous made it easier to say the truth."</div>
+            <div class="voice-author">Anand — Verified Student, 17</div>
+          </div>
+          <div class="voice-card">
+            <div class="voice-card-quote">"The peer mentors here aren't just experts; they are people who actually listen. It's the first time I felt heard in months."</div>
+            <div class="voice-author">Diya — Peer Mentor Trainee</div>
+          </div>
+        </div>
+      </section>
+
+      <footer class="footer-main">
+        <div class="footer-grid">
+          <!-- Column 1: Mission -->
+          <div class="footer-column mission-footer">
+            <div class="brand" style="font-size: 32px; color: var(--white); margin-bottom: 25px;">Nyx<span>Well</span></div>
+            <p class="mono" style="font-size: 13px; opacity: 0.6; line-height: 1.8;">A professional sanctuary designed specifically for Indian youth. Privacy-first, anonymous-always, and dedicated to the mission of mental wellbeing for all.</p>
+          </div>
+
+          <!-- Column 2: Platform -->
+          <div class="footer-column">
+            <h4>PLATFORMS</h4>
+            <ul>
+              <li><button data-page="auth-selection">Youth Sanctuary</button></li>
+              <li><button data-page="ngo-auth">NGO Intelligence Hub</button></li>
+              <li><button data-page="auth-selection">Peer Mentor Portal</button></li>
+            </ul>
+          </div>
+
+          <!-- Column 3: Resources -->
+          <div class="footer-column">
+            <h4>EXPLORE</h4>
+            <ul>
+              <li><button data-page="resources">Knowledge Library</button></li>
+              <li><button data-page="activity">Zen Activity Hub</button></li>
+              <li><button data-page="resources">Youth Helplines</button></li>
+            </ul>
+          </div>
+
+          <!-- Column 4: Legal & Social -->
+          <div class="footer-column">
+            <h4>TRUST</h4>
+            <ul>
+              <li><button>Privacy Protocol</button></li>
+              <li><button>Safety Standards</button></li>
+              <li><button>Impact Reports</button></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="footer-bottom">
+          <div class="mono" style="font-size: 12px; opacity: 0.4;">© 2026 NYXWELL SANCTUARY.</div>
+          <div class="hackathon-credit mono">BUILT FOR CODENYX HACKATHON 2026 | BEYOND THE DASHBOARD</div>
+        </div>
+      </footer>
+    </div>
+
+    <!-- ══════════════════════════════ AUTH SELECTION (NEW) ══════════════════════════ -->
+    <div id="page-auth-selection" class="page">
+      <div class="container-sm" style="text-align: center; margin-top: 100px;">
+        <h1 class="hero-title" style="font-size: 44px; margin-bottom: 40px;">Who are you?</h1>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+          <div class="brutal-card role-card" onclick="nyxwell.showPage('auth')" style="cursor: pointer; padding: 40px; transition: 0.2s;">
+            <div style="font-size: 60px; margin-bottom: 20px;">🧘</div>
+            <h2 class="mono" style="font-size: 18px; font-weight: 700;">I AM A YOUTH</h2>
+            <p class="mono" style="font-size: 11px; opacity: 0.6; margin-top: 10px;">Seeking sanctuary and mindful growth.</p>
+          </div>
+          <div class="brutal-card role-card" onclick="nyxwell.showPage('ngo-auth')" style="cursor: pointer; padding: 40px; transition: 0.2s;">
+            <div style="font-size: 60px; margin-bottom: 20px;">🏢</div>
+            <h2 class="mono" style="font-size: 18px; font-weight: 700;">I AM AN NGO STAFF</h2>
+            <p class="mono" style="font-size: 11px; opacity: 0.6; margin-top: 10px;">Managing impact and youth wellbeing.</p>
+          </div>
+        </div>
+        <button class="nav-link mono" data-page="home" style="background: none; border: none; margin-top: 50px; font-weight: 700; opacity: 0.5; cursor: pointer;">← RETURN TO LANDING</button>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════ AUTH PAGE ══════════════════════════════════ -->
+    <div id="page-auth" class="page">
+      <div class="container-sm">
+        <div class="brutal-card" style="margin-top: 60px; position: relative;">
+          <!-- BACK BUTTON -->
+          <button class="nav-link mono" data-page="auth-selection" style="background: none; border: none; padding: 0; margin-bottom: 20px; font-weight: 700; font-size: 11px; color: var(--text-dark); opacity: 0.6; display: flex; align-items: center; gap: 8px; cursor: pointer;">
+            ← BACK TO SELECTION
+          </button>
+          
+          <h1 class="hero-title" id="auth-title" style="font-size: 40px; margin-bottom: 20px;">Login</h1>
+          <div class="form-box">
+            <label class="form-label">EMAIL ADDRESS</label>
+            <input type="email" id="auth-email" class="input-brutal" placeholder="you@nyxwell.com">
+          </div>
+          <div class="form-box">
+            <label class="form-label">PASSWORD</label>
+            <input type="password" id="auth-password" class="input-brutal" placeholder="••••••••">
+          </div>
+          <div id="auth-confirm-box" class="form-box hidden">
+            <label class="form-label">CONFIRM PASSWORD</label>
+            <input type="password" id="auth-confirm-password" class="input-brutal" placeholder="••••••••">
+          </div>
+          <button class="btn btn-primary" id="auth-submit" style="width: 100%; margin-top: 20px;">LOGIN →</button>
+          <div style="display: flex; align-items: center; gap: 20px; margin: 30px 0;">
+            <hr style="flex:1; border: 1.5px solid var(--text-dark); opacity: 0.1;">
+            <span class="mono" style="font-size: 12px; font-weight: 700;">OR</span>
+            <hr style="flex:1; border: 1.5px solid var(--text-dark); opacity: 0.1;">
+          </div>
+          <button class="btn btn-secondary" id="btn-google" style="width: 100%;">
+            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18" alt="Google">
+            SIGN IN WITH GOOGLE
+          </button>
+          <p id="toggle-auth" class="mono" style="margin-top: 24px; text-align: center; cursor: pointer; font-size: 13px;">New here? <u>Create an account</u></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════ NGO AUTH PAGE ════════════════════════════════ -->
+    <div id="page-ngo-auth" class="page">
+      <div class="container-sm">
+        <div class="brutal-card" style="margin-top: 60px; position: relative; border-color: var(--sage);">
+          <button class="nav-link mono" data-page="auth-selection" style="background: none; border: none; padding: 0; margin-bottom: 20px; font-weight: 700; font-size: 11px; color: var(--sage); opacity: 0.8; display: flex; align-items: center; gap: 8px; cursor: pointer;">
+            ← BACK TO SELECTION
+          </button>
+          <h1 class="hero-title" style="font-size: 40px; margin-bottom: 10px;">NGO Portal</h1>
+          <p class="mono" style="font-size: 12px; margin-bottom: 30px; opacity: 0.6;">STAFF AUTHENTICATION SECURED</p>
+          
+          <div class="form-box">
+            <label class="form-label">WORK EMAIL</label>
+            <input type="email" id="ngo-auth-email" class="input-brutal" placeholder="staff@ngo.org" style="border-color: var(--sage);">
+          </div>
+          <div class="form-box">
+            <label class="form-label">PIN / PASSWORD</label>
+            <input type="password" id="ngo-auth-password" class="input-brutal" placeholder="••••••••" style="border-color: var(--sage);">
+          </div>
+          <button class="btn btn-primary" id="btn-ngo-submit" style="width: 100%; margin-top: 20px; background: var(--sage); border-color: var(--sage);">LOGIN TO HUB →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════ NGO WELCOME ═════════════════════════════════ -->
+    <div id="page-ngo-welcome" class="page">
+      <div class="container-sm" style="text-align: center;">
+        <div class="brutal-card" style="margin-top: 100px; background: var(--cream); border-color: var(--sage);">
+          <div class="stat-num" style="font-size: 50px; color: var(--sage);">Greetings.</div>
+          <h2 class="hero-title" style="font-size: 30px; margin-top: 20px;">Welcome to the NyxWell Hub.</h2>
+          <p class="hero-subtitle" style="margin-top: 20px;">You are entering the organizational intelligence sanctuary. Before data processing begins, please identify your mission parameters.</p>
+          <button class="btn btn-primary" id="btn-ngo-start-onboarding" style="margin-top: 40px; background: var(--sage); border-color: var(--sage);">INITIATE MISSION →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════ NGO ONBOARDING ═══════════════════════════════ -->
+    <div id="page-ngo-onboarding" class="page">
+      <div class="container-sm">
+        <div class="brutal-card" style="margin-top: 60px; border-color: var(--sage);">
+          <h1 class="hero-title" style="font-size: 32px; margin-bottom: 30px;">Mission Parameters</h1>
+          <div class="form-box">
+            <label class="form-label">ORGANIZATION NAME</label>
+            <input type="text" id="ngo-org-name" class="input-brutal" placeholder="e.g. SaveTheYouth NGO" style="border-color: var(--sage);">
+          </div>
+          <div class="form-box">
+            <label class="form-label">YOUR PRIMARY ROLE</label>
+            <select id="ngo-role" class="input-brutal" style="border-color: var(--sage);">
+              <option value="">Select Role...</option>
+              <option value="admin">NGO Administrator</option>
+              <option value="counselor">Clinical Counselor</option>
+              <option value="coordinator">Volunteer Coordinator</option>
+            </select>
+          </div>
+          <div class="form-box">
+            <label class="form-label">FOCUS REGION</label>
+            <select id="ngo-region" class="input-brutal" style="border-color: var(--sage);">
+               <option>National (Pan-India)</option>
+               <option>North India</option>
+               <option>South India</option>
+               <option>East India</option>
+               <option>West India</option>
+            </select>
+          </div>
+          <button class="btn btn-primary" id="btn-ngo-complete-onboarding" style="width: 100%; margin-top: 20px; background: var(--sage); border-color: var(--sage);">ACCESS DASHBOARD →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════ WELCOME ══════════════════════════════════ -->
+    <div id="page-welcome" class="page">
+      <div class="container-sm" style="text-align: center;">
+        <div class="brutal-card" style="margin-top: 100px; background: var(--sage-light);">
+          <div class="stat-num" style="font-size: 50px;">Hello, <span id="welcome-username">User</span>!</div>
+          <h2 class="hero-title" style="font-size: 30px; margin-top: 20px;">Welcome to NyxWell.</h2>
+          <p class="hero-subtitle" style="margin-top: 20px;">We're so glad you're here. Before we head to your dashboard, let's complete a quick 1-minute assessment.</p>
+          <button class="btn btn-primary" id="btn-start-onboarding" style="margin-top: 40px;">LET'S START →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════ ONBOARDING FORM ═══════════════════════════ -->
+    <div id="page-onboarding-form" class="page">
+      <div class="container-sm">
+        <div class="brutal-card" style="margin-top: 60px;">
+          <h1 class="hero-title" style="font-size: 32px; margin-bottom: 30px;">Quick Assessment</h1>
+          <div class="form-box">
+            <label class="form-label">WHAT IS YOUR AGE?</label>
+            <input type="number" id="onboard-age" class="input-brutal" placeholder="e.g. 19">
+          </div>
+          <div class="form-box">
+            <label class="form-label">GENDER IDENTITY</label>
+            <select id="onboard-gender" class="input-brutal">
+              <option value="">Select...</option>
+              <option>Female</option>
+              <option>Male</option>
+              <option>Non-binary</option>
+              <option>Prefer not to say</option>
+            </select>
+          </div>
+          <div class="form-box">
+            <label class="form-label">TYPICAL SLEEP HOURS</label>
+            <select id="onboard-sleep" class="input-brutal">
+              <option>Less than 5 hours</option>
+              <option>5-7 hours</option>
+              <option>7-9 hours</option>
+              <option>9+ hours</option>
+            </select>
+          </div>
+          <div class="form-box">
+            <label class="form-label">EMPLOYMENT / STUDENT STATUS</label>
+            <select id="onboard-employment" class="input-brutal">
+              <option>Full-time Student</option>
+              <option>Working Professional</option>
+              <option>Seeking Employment</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <button class="btn btn-primary" id="btn-complete-onboarding" style="width: 100%; margin-top: 20px;">COMPLETE & GO TO DASHBOARD →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════ NGO DASHBOARD (THE HUB) ══════════════════════════ -->
+    <div id="page-ngo-dashboard" class="page">
+      <div class="dash-container">
+        
+        <!-- MAIN DASHBOARD CONTENT -->
+        <main style="padding: 40px; overflow-y: auto;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 40px;">
+            <div>
+              <div class="mono" id="ngo-staff-org" style="font-size: 12px; font-weight: 700; color: var(--sage);">NYXWELL ORGANIZATION</div>
+              <h1 class="hero-title" style="font-size: 36px;" id="ngo-staff-greeting">The Hub: Overview</h1>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 8px;">
+               <div class="mono" style="font-size: 14px; opacity: 1;">MARCH 31, 2026</div>
+               <button onclick="window.nyxwell.handleNGOInject()" class="nav-link mono" style="font-size: 10px; color: var(--sage); padding: 4px 8px; border: 1.2px solid var(--sage); background: rgba(127, 168, 130, 0.05); border-radius: 2px;">[ INJECT LIVE FEED ]</button>
+            </div>
+          </div>
+
+          <!-- TOP METRICS GRID -->
+          <div class="dash-grid" style="grid-template-columns: repeat(4, 1fr); margin-bottom: 40px;">
+            <div class="brutal-card" style="padding: 20px;">
+              <div class="mono" style="font-size: 11px; opacity: 0.6;">TOTAL ACTIVE USERS</div>
+              <div class="stat-num" style="font-size: 32px;">4,281</div>
+              <div class="mono" style="font-size: 10px; color: var(--sage);">↑ 12% THIS WEEK</div>
+            </div>
+            <div class="brutal-card" style="padding: 20px; border-color: var(--coral);">
+              <div class="mono" style="font-size: 11px; color: var(--coral);">RED-TIER CASES</div>
+              <div class="stat-num" style="font-size: 32px; color: var(--coral);">12</div>
+              <div class="mono" style="font-size: 10px;">ACTION REQUIRED</div>
+            </div>
+            <div class="brutal-card" style="padding: 20px;">
+               <div class="mono" style="font-size: 11px; opacity: 0.6;">AVG. COMMUNITY MOOD</div>
+               <div class="stat-num" style="font-size: 32px;">4.2<span style="font-size: 16px; opacity: 0.4;">/5</span></div>
+               <div class="mono" style="font-size: 10px; color: var(--sage);">STABLE TREND</div>
+            </div>
+            <div class="brutal-card" style="padding: 20px;">
+               <div class="mono" style="font-size: 11px; opacity: 0.6;">AVG. RESPONSE TIME</div>
+               <div class="stat-num" style="font-size: 32px;">1.4<span style="font-size: 16px; opacity: 0.4;">hrs</span></div>
+               <div class="mono" style="font-size: 10px; color: var(--sage);">TARGET MENTORSHIP</div>
+            </div>
+          </div>
+
+          <!-- ANALYTICS ROW -->
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 400px), 1fr)); gap: 30px; margin-bottom: 30px;">
+            <div class="brutal-card" style="padding: 25px; min-height: 400px; display: flex; flex-direction: column;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+                <h3 class="mono" style="font-size: 14px; font-weight: 700;">MOOD TRENDS (ROLING 7-DAY)</h3>
+                <span class="mono" style="font-size: 10px; opacity: 0.5;">REAL-TIME DATA PROCESSING</span>
+              </div>
+              <!-- Functional Chart.js Canvas -->
+              <div id="ngo-mood-chart-container" style="height: 350px; position: relative;">
+                  <canvas id="moodTrendsChart"></canvas>
+              </div>
+            </div>
+
+            <div class="brutal-card" style="padding: 25px; min-height: 400px;">
+               <h3 class="mono" style="font-size: 14px; font-weight: 700; margin-bottom: 25px;">RISK TIER DISTRIBUTION</h3>
+               <div style="height: 200px; display: flex; align-items: center; justify-content: center; position: relative;">
+                  <div style="width: 150px; height: 150px; border-radius: 50%; border: 30px solid var(--sage-light); border-top-color: var(--coral);"></div>
+                  <div style="position: absolute; text-align: center;">
+                     <div class="stat-num" style="font-size: 24px;">72%</div>
+                     <div class="mono" style="font-size: 9px; opacity: 0.6;">GREEN TIER</div>
+                  </div>
+               </div>
+               <div class="space-y-3" style="margin-top: 20px;">
+                  <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span class="mono" style="font-size: 11px;">● RED (URGENT)</span>
+                    <span class="mono" style="font-size: 11px; font-weight: 700;">8%</span>
+                  </div>
+                  <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span class="mono" style="font-size: 11px;">● AMBER (Welfare)</span>
+                    <span class="mono" style="font-size: 11px; font-weight: 700;">20%</span>
+                  </div>
+                  <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span class="mono" style="font-size: 11px;">● GREEN (Stable)</span>
+                    <span class="mono" style="font-size: 11px; font-weight: 700;">72%</span>
+                  </div>
+               </div>
+            </div>
+          </div>
+
+          <!-- QUEUE ROW -->
+          <div class="brutal-card" style="padding: 25px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+              <h3 class="mono" style="font-size: 14px; font-weight: 700;">UNASSIGNED CASE QUEUE</h3>
+              <button class="nav-link mono" style="font-size: 10px; font-weight: 700;">VIEW FULL LIST →</button>
+            </div>
+            <div id="ngo-case-queue" class="space-y-4">
+               <div class="mono" style="padding: 40px; text-align: center; opacity: 0.4;">
+                 CONNECTING TO SECURE CASE QUEUE...
+               </div>
+            </div>
+          </div>
+
+
+          <!-- ══ NYXWELL TACTICAL INTELLIGENCE DECK (RECOUPED) ══ -->
+          <div style="margin-top: 40px; padding-top: 30px; border-top: 1.5px dashed var(--text-dark);">
+            <div class="mono" style="font-size: 10px; font-weight: 700; opacity: 0.4; margin-bottom: 25px;">AI INTELLIGENCE CENTER (TAC-DECK)</div>
+            
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+              <!-- MODULE 1: BURNOUT FORECAST -->
+              <div class="brutal-card" style="padding: 15px; border-color: var(--sage); background: var(--white);">
+                <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 15px;">
+                   <div style="width: 6px; height: 6px; background: var(--sage); border-radius: 50%; opacity: 0.8;"></div>
+                   <span class="mono" style="font-size: 9px; font-weight: 800;">BURNOUT RISK</span>
+                </div>
+                <div class="stat-num" style="font-size: 18px; margin-bottom: 4px;">Low (12%)</div>
+                <p class="mono" style="font-size: 9px; opacity: 0.6; margin-bottom: 15px;">Forecasted stability for the next 72hrs based on current mentor load.</p>
+                <button class="nav-link mono" style="font-size: 9px; padding: 0; background: none; border: none; cursor: pointer; color: var(--sage);">OPTIMIZE LOAD →</button>
+              </div>
+
+              <!-- MODULE 2: DEMOGRAPHIC SHIFT -->
+              <div class="brutal-card" style="padding: 15px; border-color: var(--sage); background: var(--white);">
+                <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 15px;">
+                   <div style="width: 6px; height: 6px; background: #F59E0B; border-radius: 50%;"></div>
+                   <span class="mono" style="font-size: 9px; font-weight: 800;">DEMO-TRENDS</span>
+                </div>
+                <div class="stat-num" style="font-size: 18px; margin-bottom: 4px;">+18% Youth</div>
+                <p class="mono" style="font-size: 9px; opacity: 0.6; margin-bottom: 15px;">Detected surge in 16-18 age group check-ins. Suggests exam-period stress.</p>
+                <button class="nav-link mono" style="font-size: 9px; padding: 0; background: none; border: none; cursor: pointer; color: var(--sage);">DEPLOY GUIDELINES →</button>
+              </div>
+
+              <!-- MODULE 3: PRIVACY INTEGRITY -->
+              <div class="brutal-card" style="padding: 15px; border-color: var(--sage); background: var(--white);">
+                <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 15px;">
+                   <div style="width: 6px; height: 6px; background: var(--sage); border-radius: 50%; animation: pulse 2s infinite;"></div>
+                   <span class="mono" style="font-size: 9px; font-weight: 800;">PRIVACY AUDIT</span>
+                </div>
+                <div class="stat-num" style="font-size: 18px; margin-bottom: 4px;">Status: 100%</div>
+                <p class="mono" style="font-size: 9px; opacity: 0.6; margin-bottom: 15px;">Real-time encryption integrity verified. All data strictly anonymized.</p>
+                <button class="nav-link mono" style="font-size: 9px; padding: 0; background: none; border: none; cursor: pointer; color: var(--sage);">VIEW LOGS →</button>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════ NGO SIDE-PAGES (PLACEHOLDERS) ════════════════════════ -->
+    <div id="page-ngo-cases" class="page">
+      <div class="dash-container">
+        <!-- Re-use main content area structure -->
+        <main style="padding: 40px; overflow-y: auto;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 40px;">
+            <div>
+              <div class="mono" style="font-size: 12px; font-weight: 700; color: var(--sage);">INSTITUTIONAL RESPONSE</div>
+              <h1 class="hero-title" style="font-size: 36px;">Case Management</h1>
+            </div>
+            <div style="display: flex; gap: 15px; align-items: center;">
+               <button onclick="window.nyxwell.handleNGOInject()" class="nav-link mono" style="font-size: 10px; color: var(--sage); padding: 4px 8px; border: 1.2px solid var(--sage); background: rgba(127, 168, 130, 0.05); border-radius: 2px;">[ INJECT LIVE FEED ]</button>
+               <button class="nav-link mono" data-page="ngo-dashboard" style="font-size: 12px; font-weight: 700;">← HUB OVERVIEW</button>
+            </div>
+          </div>
+
+          <!-- FULL-SCREEN QUEUE -->
+          <div class="brutal-card" style="padding: 25px; min-height: 70vh;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 1.5px dashed var(--text-dark); padding-bottom: 15px;">
+              <h3 class="mono" style="font-size: 14px; font-weight: 700;">LIVE RESPONSE QUEUE (PENDING)</h3>
+              <div class="mono" style="font-size: 10px; opacity: 0.5; padding: 4px 8px; border: 1px solid var(--text-dark);">REAL-TIME SYNC: ON</div>
+            </div>
+            
+            <div id="ngo-full-case-queue" class="space-y-4">
+               <!-- High-fidelity cases injected here -->
+               <div class="mono" style="padding: 40px; text-align: center; opacity: 0.4;">
+                 CONNECTING TO SECURE CASE QUEUE...
+               </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <div id="page-ngo-volunteers" class="page">
+      <div class="dash-container">
+        <main style="padding: 40px; overflow-y: auto;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 40px;">
+            <div>
+              <div class="mono" style="font-size: 12px; font-weight: 700; color: var(--sage);">RESOURCE MANAGEMENT</div>
+              <h1 class="hero-title" style="font-size: 36px;">Peer Mentors</h1>
+            </div>
+            <button class="nav-link mono" data-page="ngo-dashboard" style="font-size: 12px; font-weight: 700;">← HUB OVERVIEW</button>
+          </div>
+
+          <!-- VOLUNTEER GRID -->
+          <div class="brutal-card" style="padding: 25px; min-height: 70vh;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 1.5px dashed var(--text-dark); padding-bottom: 15px;">
+              <h3 class="mono" style="font-size: 14px; font-weight: 700;">VOLUNTEER BURN-OUT MONITOR</h3>
+              <div class="mono" style="font-size: 10px; opacity: 0.5;">REAL-TIME LOAD BALANCING</div>
+            </div>
+            
+            <div id="ngo-volunteer-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;">
+               <!-- Volunteer cards injected here -->
+               <div class="mono" style="padding: 40px; text-align: center; opacity: 0.4;">
+                 CONNECTING TO VOLUNTEER DATABASE...
+               </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <div id="page-ngo-analytics" class="page">
+      <div class="dash-container">
+        <main style="padding: 40px; overflow-y: auto;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 40px;">
+            <div>
+              <div class="mono" style="font-size: 12px; font-weight: 700; color: var(--sage);">COHORT INTELLIGENCE</div>
+              <h1 class="hero-title" style="font-size: 36px;">Deep Analytics</h1>
+            </div>
+            <button class="nav-link mono" data-page="ngo-dashboard" style="font-size: 12px; font-weight: 700;">← HUB OVERVIEW</button>
+          </div>
+
+          <!-- FULL-WIDTH HEATMAP -->
+          <div class="brutal-card" style="padding: 25px; margin-bottom: 30px;">
+             <h3 class="mono" style="font-size: 14px; font-weight: 700; border-bottom: 1.5px dashed var(--text-dark); padding-bottom: 10px; margin-bottom: 20px;">PLATFORM VITALITY (FY 2026)</h3>
+             <div id="ngo-activity-heatmap" style="overflow-x: auto; padding-bottom: 10px;">
+                 <!-- GitHub-style heatmap injected here -->
+                 <div class="mono" style="font-size: 10px; opacity: 0.4;">GENERATING PLATFORM PULSE...</div>
+             </div>
+             <div class="mono" style="font-size: 9px; opacity: 0.5; text-align: right; margin-top: 10px;">LOW ▢ ▢ ▢ ▢ HIGH ACTIVITY</div>
+          </div>
+
+          <div id="ngo-analytics-grid" style="display: grid; grid-template-columns: 1fr 1.5fr; gap: 30px;">
+             <!-- Other analytics cards injected here -->
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════ NGO IMPACT MAP ════════════════════════════ -->
+    <div id="page-ngo-impact-map" class="page">
+      <div class="dash-container">
+        <main style="padding: 40px; overflow-y: auto;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 40px;">
+            <div>
+              <div class="mono" style="font-size: 12px; font-weight: 700; color: var(--sage);">GIS MONITORING</div>
+              <h1 class="hero-title" style="font-size: 36px;">Regional Crisis Map</h1>
+            </div>
+            <div style="display: flex; gap: 15px;">
+              <button id="map-btn-satellite" class="nav-link mono" style="font-size: 11px; font-weight: 700; padding: 4px 12px; border: 1.5px solid var(--text-dark);">VIEW SATELLITE</button>
+              <button class="nav-link mono" data-page="ngo-dashboard" style="font-size: 12px; font-weight: 700;">← HUB OVERVIEW</button>
+            </div>
+          </div>
+
+          <div class="brutal-card" style="padding: 0; min-height: 75vh; position: relative; overflow: hidden; background: #222; margin-bottom: 30px;">
+             <!-- Map Canvas -->
+             <div id="ngo-map-canvas" style="width: 100%; height: 75vh; z-index: 10;"></div>
+             
+             <!-- Map Legend/Overlay -->
+             <div class="brutal-card" style="position: absolute; bottom: 30px; right: 30px; z-index: 100; background: var(--white); padding: 20px; width: 250px;">
+                <div class="stat-label" style="font-size: 10px; margin-bottom: 15px;">IMPACT LEGEND</div>
+                <div class="space-y-2">
+                   <div style="display: flex; align-items: center; gap: 10px;">
+                      <div style="width: 12px; height: 12px; background: #e63946; border-radius: 50%;"></div>
+                      <span class="mono" style="font-size: 10px;">CRITICAL DENSITY (RED)</span>
+                   </div>
+                   <div style="display: flex; align-items: center; gap: 10px;">
+                      <div style="width: 12px; height: 12px; background: #F59E0B; border-radius: 50%;"></div>
+                      <span class="mono" style="font-size: 10px;">MODERATE RISK (AMBER)</span>
+                   </div>
+                   <div style="display: flex; align-items: center; gap: 10px;">
+                      <div style="width: 12px; height: 12px; background: #2a9d8f; border-radius: 50%;"></div>
+                      <span class="mono" style="font-size: 10px;">STABLE REGION (GREEN)</span>
+                   </div>
+                </div>
+                <div style="margin-top: 15px; border-top: 1px solid #ddd; padding-top: 10px;">
+                   <div class="mono" style="font-size: 9px; opacity: 0.6;">Active Cases: <span id="map-active-cases">--</span></div>
+                   <div class="mono" style="font-size: 9px; opacity: 0.6;">Mentors Assigned: <span id="map-active-mentors">--</span></div>
+                </div>
+             </div>
+          </div>
+
+          <!-- REGIONAL RESPONSE CENTER (NEW) -->
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 400px), 1fr)); gap: 30px;">
+             <!-- 1. VULNERABILITY SCOREBOARD -->
+             <div class="brutal-card dash-box" style="padding: 30px; background: var(--white);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+                   <div class="stat-label">REGIONAL VULNERABILITY SCOREBOARD</div>
+                   <div class="mono" style="font-size: 9px; opacity: 0.5;">REAL-TIME TACTICAL OVERVIEW</div>
+                </div>
+                <div id="map-allocation-list" class="space-y-4">
+                   <!-- Hotspots list injected here -->
+                   <div class="mono" style="padding: 40px; text-align: center; opacity: 0.4;">INITIALIZING GIS SCOREBOARD...</div>
+                </div>
+             </div>
+
+             <!-- 2. DEPLOYMENT STATS -->
+             <div class="brutal-card dash-box" style="padding: 30px; background: var(--cream);">
+                <div class="stat-label" style="margin-bottom: 20px;">DEPLOYMENT IMPACT</div>
+                <div class="space-y-4">
+                   <div class="brutal-card" style="padding: 15px; background: var(--white); border-color: var(--sage);">
+                      <div class="mono" style="font-size: 10px; opacity: 0.6;">AVERAGE RESPONSE TIME</div>
+                      <div class="stat-num" style="font-size: 24px;">0.8<span style="font-size: 14px;"> hrs</span></div>
+                   </div>
+                   <div class="brutal-card" style="padding: 15px; background: var(--white); border-color: #F59E0B;">
+                      <div class="mono" style="font-size: 10px; opacity: 0.6;">RESOURCES MOBILIZED</div>
+                      <div id="map-mobilized-val" class="stat-num" style="font-size: 24px;">12</div>
+                   </div>
+                </div>
+                <div style="margin-top: 30px; padding-top: 20px; border-top: 1.5px dashed var(--text-dark);">
+                   <p class="mono" style="font-size: 11px; line-height: 1.6; opacity: 0.7;">
+                      Use the <b>Scoreboard</b> to allocate mentors to regions with the highest case density. Green indicates a stable region, while red requires immediate intervention.
+                   </p>
+                </div>
+             </div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <div id="page-ngo-reports" class="page">
+      <div class="dash-container">
+        <main style="padding: 40px; overflow-y: auto;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 40px;">
+            <div>
+              <div class="mono" style="font-size: 12px; font-weight: 700; color: var(--sage);">AUDIT & DISCLOSURE</div>
+              <h1 class="hero-title" style="font-size: 36px;">Impact Reports</h1>
+            </div>
+            <button class="nav-link mono" data-page="ngo-dashboard" style="font-size: 12px; font-weight: 700;">← HUB OVERVIEW</button>
+          </div>
+
+          <div class="brutal-card" style="padding: 30px;">
+             <h3 class="mono" style="font-size: 14px; font-weight: 700; border-bottom: 1.5px solid var(--text-dark); padding-bottom: 10px; margin-bottom: 20px;">AUTOMATED INSTITUTIONAL DISCLOSURE</h3>
+             <div id="ngo-impact-summary" class="mono" style="font-size: 13px;">
+                <!-- Impact reports injected here -->
+                <div style="opacity: 0.4;">GENERATING AUDIT REPORT...</div>
+             </div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <div id="page-overview" class="page">
+      <div class="container-sm" style="max-width: 1200px; padding: 15px 20px;">
+        
+        <div class="dash-header" style="margin-bottom: 30px;">
+          <h1 class="hero-title" style="font-size: 32px; margin-bottom: 5px;" id="overview-greeting">Welcome back!</h1>
+          <p class="mono" id="overview-date" style="font-size: 14px; opacity: 0.6;">Monday, March 30, 2025</p>
+        </div>
+
+        <!-- ══ AI MENTAL HEALTH ASSESSMENT PANEL ══ -->
+        <div id="ai-assessment-panel" style="margin-bottom: 35px;">
+          <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+            <div class="mono" style="font-size: 11px; font-weight: 700; letter-spacing: 1.5px; color: var(--sage);">🧠 AI MENTAL HEALTH SCANNER</div>
+            <div class="mono" style="font-size: 9px; padding: 2px 8px; background: var(--sage-light); border: 1px solid var(--sage); color: var(--sage);">REAL-TIME</div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+
+            <!-- VOICE ANALYSIS CARD -->
+            <div class="brutal-card" id="voice-assessment-card" style="padding: 28px; background: var(--white); cursor: pointer; position: relative; overflow: hidden;">
+              <div style="position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--sage), #a8d5b5);"></div>
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px;">
+                <div>
+                  <div style="font-size: 36px; margin-bottom: 8px;">🎙️</div>
+                  <h3 style="font-size: 20px; font-weight: 800; margin-bottom: 4px;">Voice Analysis</h3>
+                  <p class="mono" style="font-size: 11px; opacity: 0.6; line-height: 1.5;">Speak freely and let our AI detect your emotional state from tone & sentiment.</p>
+                </div>
+              </div>
+              <div id="voice-status" class="mono" style="font-size: 10px; padding: 8px 12px; background: var(--cream); border: 1px solid #ddd; margin-bottom: 16px; min-height: 36px; display: flex; align-items: center;">
+                Ready to listen...
+              </div>
+              <div id="voice-transcript-box" class="mono" style="font-size: 11px; padding: 10px; background: #fafafa; border: 1px dashed #ccc; min-height: 48px; line-height: 1.6; color: #555; display: none; margin-bottom: 14px; border-radius: 2px; font-style: italic;"></div>
+              <button id="btn-voice-scan" class="btn btn-primary" style="width: 100%; padding: 12px; font-size: 12px;" onclick="window.NyxAI.startVoice()">
+                🎙️ START VOICE SCAN
+              </button>
+              <div id="voice-result-panel" style="display: none; margin-top: 18px; padding: 16px; border: var(--border); background: var(--sage-light);">
+                <div class="mono" style="font-size: 10px; opacity: 0.7; margin-bottom: 8px;">MENTAL HEALTH SCORE</div>
+                <div style="display: flex; align-items: center; gap: 16px;">
+                  <div id="voice-score-num" class="stat-num" style="font-size: 48px; color: var(--sage);">--</div>
+                  <div>
+                    <div id="voice-score-label" class="mono" style="font-size: 13px; font-weight: 800;">ANALYZING...</div>
+                    <div id="voice-score-detail" class="mono" style="font-size: 10px; opacity: 0.7; margin-top: 4px; line-height: 1.5;"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- FACIAL EXPRESSION CARD -->
+            <div class="brutal-card" id="face-assessment-card" style="padding: 28px; background: var(--white); cursor: pointer; position: relative; overflow: hidden;">
+              <div style="position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--coral), #f4a58a);"></div>
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px;">
+                <div>
+                  <div style="font-size: 36px; margin-bottom: 8px;">📷</div>
+                  <h3 style="font-size: 20px; font-weight: 800; margin-bottom: 4px;">Facial Scan</h3>
+                  <p class="mono" style="font-size: 11px; opacity: 0.6; line-height: 1.5;">Camera reads your micro-expressions and maps them to an emotional wellbeing index.</p>
+                </div>
+              </div>
+              <div id="face-status" class="mono" style="font-size: 10px; padding: 8px 12px; background: var(--cream); border: 1px solid #ddd; margin-bottom: 16px; min-height: 36px; display: flex; align-items: center;">
+                Camera offline...
+              </div>
+              <div id="face-video-wrapper" style="display: none; position: relative; margin-bottom: 14px; border: var(--border); overflow: hidden; border-radius: 2px; background: #111;">
+                <video id="face-video" autoplay muted playsinline style="width: 100%; max-height: 180px; object-fit: cover; display: block;"></video>
+                <canvas id="face-canvas" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></canvas>
+                <div style="position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.7); color: #fff; font-size: 9px; padding: 3px 8px;" class="mono">LIVE ●</div>
+              </div>
+              <button id="btn-face-scan" class="btn btn-primary" style="width: 100%; padding: 12px; font-size: 12px; background: var(--coral); border-color: var(--coral);" onclick="window.NyxAI.startFace()">
+                📷 START FACIAL SCAN
+              </button>
+              <div id="face-result-panel" style="display: none; margin-top: 18px; padding: 16px; border: var(--border); background: var(--coral-light);">
+                <div class="mono" style="font-size: 10px; opacity: 0.7; margin-bottom: 8px;">WELLBEING INDEX</div>
+                <div style="display: flex; align-items: center; gap: 16px;">
+                  <div id="face-score-num" class="stat-num" style="font-size: 48px; color: var(--coral);">--</div>
+                  <div>
+                    <div id="face-score-label" class="mono" style="font-size: 13px; font-weight: 800;">SCANNING...</div>
+                    <div id="face-score-detail" class="mono" style="font-size: 10px; opacity: 0.7; margin-top: 4px; line-height: 1.5;"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <!-- ══ END AI ASSESSMENT PANEL ══ -->
+
+        <div class="dash-grid">
+          <!-- BOX 1: INSIGHTS -->
+          <div class="brutal-card dash-box">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+              <div class="stat-label">INSIGHTS</div>
+              <span class="mono" style="font-size: 10px; opacity: 0.5;">THIS WEEK</span>
+            </div>
+            <div id="overview-insights-list" class="space-y-4">
+              <!-- Insights injected here -->
+              <div class="insight-item">
+                <div class="mono" style="font-size: 12px; opacity: 0.5;">Analyzing your data...</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- BOX 2: METRICS SUMMARY -->
+          <div class="brutal-card dash-box">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+              <div class="stat-label">METRICS SUMMARY</div>
+              <span class="mono" style="font-size: 10px; opacity: 0.5;">REAL-TIME</span>
+            </div>
+            <div class="summary-subgrid">
+              <div class="mini-card">
+                <div style="display: flex; justify-content: space-between;">
+                  <span class="mono" style="font-size: 11px; font-weight: 700;">MOOD</span>
+                  <span id="summ-mood-emoji">😐</span>
+                </div>
+                <div class="stat-num" id="summ-mood-val" style="font-size: 24px; margin: 10px 0;">--</div>
+                <div class="mono" id="summ-mood-trend" style="font-size: 10px; opacity: 0.6;">STABLE</div>
+              </div>
+              <div class="mini-card">
+                <div style="display: flex; justify-content: space-between;">
+                  <span class="mono" style="font-size: 11px; font-weight: 700;">SLEEP</span>
+                  <span>💤</span>
+                </div>
+                <div class="stat-num" id="summ-sleep-val" style="font-size: 24px; margin: 10px 0;">--</div>
+                <div class="mono" id="summ-sleep-trend" style="font-size: 10px; opacity: 0.6;">STABLE</div>
+              </div>
+              <div class="mini-card">
+                <div style="display: flex; justify-content: space-between;">
+                  <span class="mono" style="font-size: 11px; font-weight: 700;">STRESS</span>
+                  <span>🧠</span>
+                </div>
+                <div class="stat-num" id="summ-stress-val" style="font-size: 24px; margin: 10px 0;">--</div>
+                <div class="mono" id="summ-stress-trend" style="font-size: 10px; opacity: 0.6;">STABLE</div>
+              </div>
+              <div class="mini-card" style="background: var(--sage-light);">
+                <div style="display: flex; justify-content: space-between;">
+                  <span class="mono" style="font-size: 11px; font-weight: 700;">STREAK</span>
+                  <span id="summ-streak-fire"></span>
+                </div>
+                <div class="stat-num" id="summ-streak-val" style="font-size: 24px; margin: 10px 0;">0</div>
+                <div class="mono" style="font-size: 10px; opacity: 0.6;">DAYS</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- BOX 3: QUICK ENTRY -->
+          <div class="brutal-card dash-box">
+            <div class="stat-label" style="margin-bottom: 25px;">QUICK ENTRY</div>
+            
+            <div class="entry-row">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <label class="mono" style="font-size: 12px; font-weight: 700;">MOOD (1-10)</label>
+                <span class="mono" id="q-mood-val" style="font-weight: 900;">5</span>
+              </div>
+              <input type="range" class="custom-range" id="q-mood-slider" min="1" max="10" value="5" oninput="document.getElementById('q-mood-val').textContent=this.value">
+              <button class="btn btn-primary" id="q-mood-log" style="width: 100%; margin-top: 10px; padding: 10px; font-size: 11px;">LOG MOOD</button>
+            </div>
+
+            <div class="entry-row" style="margin-top: 20px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <label class="mono" style="font-size: 12px; font-weight: 700;">SLEEP HOURS</label>
+                <span class="mono" id="q-sleep-val" style="font-weight: 900;">7</span>
+              </div>
+              <input type="range" class="custom-range" id="q-sleep-slider" min="0" max="12" step="0.5" value="7" oninput="document.getElementById('q-sleep-val').textContent=this.value">
+              <button class="btn btn-primary" id="q-sleep-log" style="width: 100%; margin-top: 10px; padding: 10px; font-size: 11px;">LOG SLEEP</button>
+            </div>
+
+            <div class="entry-row" style="margin-top: 20px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <label class="mono" style="font-size: 12px; font-weight: 700;">STRESS (1-10)</label>
+                <span class="mono" id="q-stress-val" style="font-weight: 900;">5</span>
+              </div>
+              <input type="range" class="custom-range" id="q-stress-slider" min="1" max="10" value="5" oninput="document.getElementById('q-stress-val').textContent=this.value">
+              <button class="btn btn-primary" id="q-stress-log" style="width: 100%; margin-top: 10px; padding: 10px; font-size: 11px;">LOG STRESS</button>
+            </div>
+          </div>
+
+          <!-- BOX 4: RECENT ACTIVITY -->
+          <div class="brutal-card dash-box">
+            <div class="stat-label" style="margin-bottom: 25px;">RECENT ACTIVITY</div>
+            <div id="dash-activity-list" class="space-y-3" style="max-height: 400px; overflow-y: auto; padding-right: 10px;">
+              <p class="mono" style="font-size: 12px; opacity: 0.5;">No activity logs found.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="page-mood-tracker" class="page">
+      <div class="container-sm" style="max-width: 1200px; padding: 20px;">
+        
+        <div class="dash-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+          <div>
+            <h1 class="hero-title" style="font-size: 32px; margin-bottom: 5px;">Mood Tracker</h1>
+            <p class="mono" style="font-size: 14px; opacity: 0.6;">Track your emotional wellbeing</p>
+          </div>
+          <div style="display: flex; gap: 10px;">
+            <select id="mood-filters-range" class="btn mono" style="font-size: 11px; padding: 8px 12px; background: var(--white);">
+              <option value="7d">Last 7 days</option>
+              <option value="30d">Last 30 days</option>
+              <option value="90d">Last 90 days</option>
+              <option value="all">All time</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- 1. INSIGHTS SUMMARY (3 Cards) -->
+        <div class="dash-grid" style="margin-bottom: 30px;">
+          <div class="brutal-card dash-box" style="min-height: 160px; justify-content: space-between;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div class="stat-label">AVERAGE MOOD</div>
+              <span id="mood-avg-emoji" style="font-size: 24px;">😐</span>
+            </div>
+            <div class="stat-num" id="mood-avg-val" style="font-size: 36px; margin: 15px 0;">--</div>
+            <div class="mono" style="font-size: 11px; display: flex; align-items: center; gap: 5px;">
+              <span id="mood-trend-icon">→</span>
+              <span id="mood-trend-text" style="opacity: 0.6;">STABLE TREND</span>
+            </div>
+          </div>
+
+          <div class="brutal-card dash-box" style="min-height: 160px;">
+            <div class="stat-label" style="margin-bottom: 15px;">MOOD PATTERNS</div>
+            <div class="mono" style="font-size: 12px; display: grid; gap: 8px;">
+              <div style="display: flex; justify-content: space-between;">
+                <span style="opacity: 0.6;">Best day:</span>
+                <span id="mood-best-day" style="font-weight: 700;">--</span>
+              </div>
+              <div style="display: flex; justify-content: space-between;">
+                <span style="opacity: 0.6;">Best time:</span>
+                <span id="mood-best-time" style="font-weight: 700;">--</span>
+              </div>
+              <div style="display: flex; justify-content: space-between;">
+                <span style="opacity: 0.6;">Variability:</span>
+                <span id="mood-variability" style="font-weight: 700;">0 pts</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="brutal-card dash-box" style="min-height: 160px;">
+            <div class="stat-label" style="margin-bottom: 15px;">MOOD EXTREMES</div>
+            <div class="mono" style="font-size: 12px; display: grid; gap: 8px;">
+              <div style="display: flex; justify-content: space-between;">
+                <span style="opacity: 0.6;">Highest mood:</span>
+                <span id="mood-highest-day" style="font-weight: 700;">--</span>
+              </div>
+              <div style="display: flex; justify-content: space-between;">
+                <span style="opacity: 0.6;">Lowest mood:</span>
+                <span id="mood-lowest-day" style="font-weight: 700;">--</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. MOOD TIMELINE (Line Chart) -->
+        <div class="brutal-card dash-box" style="margin-bottom: 30px; min-height: 350px;">
+          <div class="stat-label" style="margin-bottom: 25px;">MOOD TIMELINE</div>
+          <div style="flex: 1; min-height: 250px; position: relative;">
+            <canvas id="chart-timeline"></canvas>
+          </div>
+        </div>
+
+        <!-- 3. DISTRIBUTION & WEEKDAY (2 Bar Charts) -->
+        <div class="dash-grid" style="margin-bottom: 30px;">
+          <div class="brutal-card dash-box" style="min-height: 350px;">
+            <div class="stat-label" style="margin-bottom: 25px;">MOOD DISTRIBUTION</div>
+            <div style="flex: 1; position: relative;">
+              <canvas id="chart-distribution"></canvas>
+            </div>
+          </div>
+          <div class="brutal-card dash-box" style="min-height: 350px;">
+            <div class="stat-label" style="margin-bottom: 25px;">WEEKDAY PATTERNS</div>
+            <div style="flex: 1; position: relative;">
+              <canvas id="chart-weekday"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. LOGGING & HISTORY (2 Columns) -->
+        <div class="dash-grid">
+          <div class="brutal-card dash-box">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+              <div class="stat-label">LOG YOUR MOOD</div>
+              <button id="mood-btn-seed" class="btn mono" style="font-size: 9px; padding: 5px 10px; background: var(--sage-light); border-color: var(--text-dark);">SEED SAMPLE DATA</button>
+            </div>
+            
+            <div class="entry-row" style="margin-bottom: 30px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <label class="mono" style="font-size: 13px; font-weight: 700;">HOW ARE YOU FEELING? (1-10)</label>
+                <span class="mono" id="mood-form-score-val" style="font-weight: 900; font-size: 20px;">5</span>
+              </div>
+              <input type="range" class="custom-range" id="mood-form-score" min="1" max="10" value="5" oninput="document.getElementById('mood-form-score-val').textContent=this.value">
+              <div class="mono" style="display: flex; justify-content: space-between; margin-top: 8px; font-size: 10px; opacity: 0.5;">
+                <span>Very Bad</span>
+                <span>Neutral</span>
+                <span>Excellent</span>
+              </div>
+            </div>
+
+            <div class="entry-row" style="margin-bottom: 30px;">
+              <label class="mono" style="display: block; font-size: 13px; font-weight: 700; margin-bottom: 15px;">WHAT'S AFFECTING YOUR MOOD?</label>
+              <div id="mood-triggers-container" class="tag-grid"></div>
+            </div>
+
+            <div class="entry-row" style="margin-bottom: 30px;">
+              <label class="mono" style="display: block; font-size: 13px; font-weight: 700; margin-bottom: 15px;">ACTIVITIES TODAY</label>
+              <div id="mood-activities-container" class="tag-grid"></div>
+            </div>
+
+            <div class="entry-row" style="margin-bottom: 30px;">
+              <label class="mono" style="display: block; font-size: 13px; font-weight: 700; margin-bottom: 10px;">NOTES (OPTIONAL)</label>
+              <textarea id="mood-form-notes" class="input-brutal mono" style="width: 100%; min-height: 100px; padding: 15px; background: var(--white);" placeholder="What's on your mind today?"></textarea>
+            </div>
+
+            <button id="mood-btn-save" class="btn btn-primary" style="width: 100%; padding: 15px; font-size: 14px;">SAVE MOOD ENTRY →</button>
+          </div>
+
+          <div class="brutal-card dash-box">
+            <div class="stat-label" style="margin-bottom: 25px;">RECENT ENTRIES</div>
+            <div id="mood-entries-list" class="space-y-4" style="flex: 1; max-height: 800px; overflow-y: auto; padding-right: 15px;">
+              <p class="mono" style="font-size: 12px; opacity: 0.5;">Log your first mood to see history.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════ SLEEP TRACKER ════════════════════════════ -->
+    <div id="page-sleep-tracker" class="page">
+      <div class="container-sm" style="max-width: 1200px; padding: 20px;">
+        
+        <div class="dash-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+          <div>
+            <h1 class="hero-title" style="font-size: 32px; margin-bottom: 5px;">Sleep Tracker</h1>
+            <p class="mono" style="font-size: 14px; opacity: 0.6;">Analyze your rest and recovery</p>
+          </div>
+          <div style="display: flex; gap: 10px;">
+            <select id="sleep-filters-range" class="btn mono" style="font-size: 11px; padding: 8px 12px; background: var(--white);">
+              <option value="7d">Last 7 days</option>
+              <option value="30d">Last 30 days</option>
+              <option value="90d">Last 90 days</option>
+              <option value="all">All time</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- 1. SLEEP INSIGHTS (3 Cards) -->
+        <div class="dash-grid" style="margin-bottom: 30px;">
+          <div class="brutal-card dash-box" style="min-height: 160px; justify-content: space-between;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div class="stat-label">AVERAGE SLEEP</div>
+              <span style="font-size: 24px;">💤</span>
+            </div>
+            <div class="stat-num" id="sleep-avg-val" style="font-size: 36px; margin: 15px 0;">-- hrs</div>
+            <div class="mono" style="font-size: 11px; display: flex; align-items: center; gap: 5px;">
+              <span id="sleep-trend-icon">→</span>
+              <span id="sleep-trend-text" style="opacity: 0.6;">STABLE TREND</span>
+            </div>
+          </div>
+
+          <div class="brutal-card dash-box" style="min-height: 160px;">
+            <div class="stat-label" style="margin-bottom: 15px;">SLEEP PATTERNS</div>
+            <div class="mono" style="font-size: 12px; display: grid; gap: 8px;">
+              <div style="display: flex; justify-content: space-between;">
+                <span style="opacity: 0.6;">Quality:</span>
+                <span id="sleep-avg-quality" style="font-weight: 700;">--</span>
+              </div>
+              <div style="display: flex; justify-content: space-between;">
+                <span style="opacity: 0.6;">Best night:</span>
+                <span id="sleep-best-day" style="font-weight: 700;">--</span>
+              </div>
+              <div style="display: flex; justify-content: space-between;">
+                <span style="opacity: 0.6;">Worst night:</span>
+                <span id="sleep-worst-day" style="font-weight: 700;">--</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="brutal-card dash-box" style="min-height: 160px; background: var(--sage-light);">
+            <div class="stat-label" style="margin-bottom: 12px;">SLEEP HEALTH</div>
+            <div class="mono" style="font-size: 12px; display: grid; gap: 6px;">
+              <div style="display: flex; justify-content: space-between;">
+                <span style="opacity: 0.6;">Sleep debt:</span>
+                <span id="sleep-debt-val" style="font-weight: 700;">0 hrs</span>
+              </div>
+              <div style="display: flex; justify-content: space-between;">
+                <span style="opacity: 0.6;">Rec. bedtime:</span>
+                <span id="sleep-rec-bedtime" style="font-weight: 700;">--:--</span>
+              </div>
+              <div id="sleep-health-tip" style="font-size: 9px; margin-top: 5px; line-height: 1.2; font-weight: 700; color: var(--coral);">
+                Your sleep schedule looks healthy.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. SLEEP DURATION (Area Chart) -->
+        <div class="brutal-card dash-box" style="margin-bottom: 30px; min-height: 350px;">
+          <div class="stat-label" style="margin-bottom: 25px;">SLEEP DURATION (HRS)</div>
+          <div style="flex: 1; min-height: 250px; position: relative;">
+            <canvas id="chart-sleep-timeline"></canvas>
+          </div>
+        </div>
+
+        <!-- 3. WEEKDAY & DISTRIBUTION (2 Bar Charts) -->
+        <div class="dash-grid" style="margin-bottom: 30px;">
+          <div class="brutal-card dash-box" style="min-height: 350px;">
+            <div class="stat-label" style="margin-bottom: 25px;">SLEEP BY DAY OF WEEK</div>
+            <div style="flex: 1; position: relative;">
+              <canvas id="chart-sleep-weekday"></canvas>
+            </div>
+          </div>
+          <div class="brutal-card dash-box" style="min-height: 350px;">
+            <div class="stat-label" style="margin-bottom: 25px;">DURATION DISTRIBUTION</div>
+            <div style="flex: 1; position: relative;">
+              <canvas id="chart-sleep-dist"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. LOGGING & HISTORY -->
+        <div class="dash-grid">
+          <div class="brutal-card dash-box">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+              <div class="stat-label">LOG YOUR SLEEP</div>
+              <button id="sleep-btn-seed" class="btn mono" style="font-size: 9px; padding: 5px 10px; background: var(--sage-light); border-color: var(--text-dark);">SEED SAMPLE DATA</button>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px;">
+              <div class="entry-row">
+                <label class="mono" style="display: block; font-size: 12px; font-weight: 700; margin-bottom: 8px;">BEDTIME</label>
+                <input type="time" id="sleep-form-bed" class="input-brutal mono" style="width:100%; padding: 8px; border-width: 2px;" value="22:30">
+              </div>
+              <div class="entry-row">
+                <label class="mono" style="display: block; font-size: 12px; font-weight: 700; margin-bottom: 8px;">WAKE TIME</label>
+                <input type="time" id="sleep-form-wake" class="input-brutal mono" style="width:100%; padding: 8px; border-width: 2px;" value="06:30">
+              </div>
+            </div>
+
+            <div class="entry-row" style="margin-bottom: 30px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <label class="mono" style="font-size: 13px; font-weight: 700;">TOTAL DURATION (HRS)</label>
+                <span class="mono" id="sleep-form-hours-val" style="font-weight: 900; font-size: 20px;">8.0</span>
+              </div>
+              <input type="range" class="custom-range" id="sleep-form-hours" min="0" max="15" step="0.5" value="8">
+            </div>
+
+            <div class="entry-row" style="margin-bottom: 30px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <label class="mono" style="font-size: 13px; font-weight: 700;">SLEEP QUALITY</label>
+                <span id="sleep-form-quality-emoji" style="font-size: 20px;">😐</span>
+              </div>
+              <input type="range" class="custom-range" id="sleep-form-quality" min="1" max="5" step="1" value="3">
+              <div class="mono" id="sleep-form-quality-text" style="font-size: 10px; opacity: 0.5; margin-top: 5px;">FAIR QUALITY</div>
+            </div>
+
+            <div class="entry-row" style="margin-bottom: 25px;">
+              <label class="mono" style="display: block; font-size: 13px; font-weight: 700; margin-bottom: 15px;">FACTORS AFFECTING SLEEP</label>
+              <div id="sleep-factors-container" class="tag-grid"></div>
+            </div>
+
+            <div class="entry-row" style="margin-bottom: 25px;">
+              <label class="mono" style="display: block; font-size: 13px; font-weight: 700; margin-bottom: 10px;">NOTES (OPTIONAL)</label>
+              <textarea id="sleep-form-notes" class="input-brutal mono" style="width: 100%; min-height: 80px; padding: 12px;" placeholder="Anything notable about your rest?"></textarea>
+            </div>
+
+            <button id="sleep-btn-save" class="btn btn-primary" style="width: 100%; padding: 15px; font-size: 14px;">SAVE SLEEP ENTRY →</button>
+          </div>
+
+          <div class="brutal-card dash-box">
+            <div class="stat-label" style="margin-bottom: 25px;">RECENT SLEEP ENTRIES</div>
+            <div id="sleep-entries-list" class="space-y-4" style="flex: 1; max-height: 800px; overflow-y: auto; padding-right: 15px;">
+              <p class="mono" style="font-size: 12px; opacity: 0.5;">Log your sleep to see history.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════ STRESS TRACKER ════════════════════════════ -->
+    <div id="page-stress-tracker" class="page">
+      <div class="container-sm" style="max-width: 1200px; padding: 20px;">
+        
+        <div class="dash-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+          <div>
+            <h1 class="hero-title" style="font-size: 32px; margin-bottom: 5px;">Stress Tracker</h1>
+            <p class="mono" style="font-size: 14px; opacity: 0.6;">Analyze your stressors and symptoms</p>
+          </div>
+          <div style="display: flex; gap: 10px;">
+            <select id="stress-filters-range" class="btn mono" style="font-size: 11px; padding: 8px 12px; background: var(--white);">
+              <option value="7d">Last 7 days</option>
+              <option value="30d" selected>Last 30 days</option>
+              <option value="all">All time</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- 1. INSIGHTS SUMMARY (3 Cards) -->
+        <div class="dash-grid" style="margin-bottom: 30px;">
+          <div class="brutal-card dash-box" style="min-height: 160px; justify-content: space-between;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div class="stat-label">AVERAGE STRESS</div>
+              <span id="stress-avg-emoji" style="font-size: 24px;">😐</span>
+            </div>
+            <div class="stat-num" id="stress-avg-val" style="font-size: 36px; margin: 15px 0;">--/10</div>
+            <div class="mono" style="font-size: 11px; display: flex; align-items: center; gap: 5px;">
+              <span id="stress-trend-icon">→</span>
+              <span id="stress-trend-text" style="opacity: 0.6;">STABLE TREND</span>
+            </div>
+          </div>
+
+          <div class="brutal-card dash-box" style="min-height: 160px;">
+            <div class="stat-label" style="margin-bottom: 15px;">TOP SOURCES</div>
+            <div id="stress-top-sources-list" class="mono" style="font-size: 12px; display: grid; gap: 8px;">
+              <div class="text-center py-2 opacity-50">No data available</div>
+            </div>
+          </div>
+
+          <div class="brutal-card dash-box" style="min-height: 160px; border-color: var(--coral);">
+            <div class="stat-label" style="margin-bottom: 15px;">STRESS PATTERNS</div>
+            <div class="mono" style="font-size: 12px; display: grid; gap: 8px;">
+              <div style="display: flex; justify-content: space-between;">
+                <span style="opacity: 0.6;">Highest day:</span>
+                <span id="stress-highest-day" style="font-weight: 700;">--</span>
+              </div>
+              <div style="display: flex; justify-content: space-between;">
+                <span style="opacity: 0.6;">Lowest day:</span>
+                <span id="stress-lowest-day" style="font-weight: 700;">--</span>
+              </div>
+              <div id="stress-pattern-tip" style="font-size: 9px; margin-top: 5px; line-height: 1.2; font-weight: 700; color: var(--coral);">
+                Log your stress to see peak times.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. STRESS TIMELINE (Area Chart) -->
+        <div class="brutal-card dash-box" style="margin-bottom: 30px; min-height: 350px;">
+          <div class="stat-label" style="margin-bottom: 25px;">STRESS LEVELS OVER TIME</div>
+          <div style="flex: 1; min-height: 250px; position: relative;">
+            <canvas id="chart-stress-timeline"></canvas>
+          </div>
+        </div>
+
+        <!-- 3. WEEKDAY & SOURCES (2 Bar Charts) -->
+        <div class="dash-grid" style="margin-bottom: 30px;">
+          <div class="brutal-card dash-box" style="min-height: 350px;">
+            <div class="stat-label" style="margin-bottom: 25px;">STRESS BY DAY OF WEEK</div>
+            <div style="flex: 1; position: relative;">
+              <canvas id="chart-stress-weekday"></canvas>
+            </div>
+          </div>
+          <div class="brutal-card dash-box" style="min-height: 350px;">
+            <div class="stat-label" style="margin-bottom: 25px;">TOP STRESS SOURCES</div>
+            <div style="flex: 1; position: relative;">
+              <canvas id="chart-stress-sources"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. SYMPTOMS & TIME OF DAY (2 Charts) -->
+        <div class="dash-grid" style="margin-bottom: 30px;">
+          <div class="brutal-card dash-box" style="min-height: 350px;">
+            <div class="stat-label" style="margin-bottom: 25px;">COMMON SYMPTOMS</div>
+            <div style="flex: 1; position: relative;">
+              <canvas id="chart-stress-symptoms"></canvas>
+            </div>
+          </div>
+          <div class="brutal-card dash-box" style="min-height: 350px;">
+            <div class="stat-label" style="margin-bottom: 25px;">STRESS BY TIME OF DAY</div>
+            <div style="flex: 1; position: relative;">
+              <canvas id="chart-stress-timeslot"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5. LOGGING & HISTORY -->
+        <div class="dash-grid" style="margin-bottom: 30px;">
+          <div class="brutal-card dash-box">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+              <div class="stat-label">LOG YOUR STRESS</div>
+              <button id="stress-btn-seed" class="btn mono" style="font-size: 9px; padding: 5px 10px; background: var(--sage-light); border-color: var(--text-dark);">SEED SAMPLE DATA</button>
+            </div>
+
+            <div class="entry-row" style="margin-bottom: 30px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <label class="mono" style="font-size: 13px; font-weight: 700;">CURRENT STRESS LEVEL (1-10)</label>
+                <span class="mono" id="stress-form-level-val" style="font-weight: 900; font-size: 20px;">5</span>
+              </div>
+              <input type="range" class="custom-range" id="stress-form-level" min="1" max="10" step="1" value="5">
+              <div class="mono" id="stress-form-level-text" style="font-size: 10px; opacity: 0.5; margin-top: 5px;">MODERATE STRESS</div>
+            </div>
+
+            <div class="entry-row" style="margin-bottom: 30px;">
+              <label class="mono" style="display: block; font-size: 13px; font-weight: 700; margin-bottom: 15px;">WHAT'S CAUSING THIS STRESS?</label>
+              <div id="stress-sources-container" class="tag-grid"></div>
+            </div>
+
+            <div class="entry-row" style="margin-bottom: 30px;">
+              <label class="mono" style="display: block; font-size: 13px; font-weight: 700; margin-bottom: 15px;">SYMPTOMS EXPERIENCED</label>
+              <div id="stress-symptoms-container" class="tag-grid"></div>
+            </div>
+
+            <div class="entry-row" style="margin-bottom: 25px;">
+              <label class="mono" style="display: block; font-size: 13px; font-weight: 700; margin-bottom: 10px;">NOTES (OPTIONAL)</label>
+              <textarea id="stress-form-notes" class="input-brutal mono" style="width: 100%; min-height: 80px; padding: 12px;" placeholder="What's making you feel this way?"></textarea>
+            </div>
+
+            <button id="stress-btn-save" class="btn btn-primary" style="width: 100%; padding: 15px; font-size: 14px; background: var(--coral-light);">SAVE STRESS ENTRY →</button>
+          </div>
+
+          <div class="brutal-card dash-box">
+            <div class="stat-label" style="margin-bottom: 25px;">RECENT STRESS LOGS</div>
+            <div id="stress-entries-list" class="space-y-4" style="flex: 1; max-height: 800px; overflow-y: auto; padding-right: 15px;">
+              <p class="mono" style="font-size: 12px; opacity: 0.5;">Log your first stress entry to see history.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6. MANAGEMENT TIPS (Zen Cards) -->
+        <div class="dash-grid">
+          <div class="brutal-card dash-box" style="background: var(--sage-light);">
+            <div class="flex items-center mb-4">
+              <span style="font-size: 24px; margin-right: 12px;">🧘</span>
+              <div class="stat-label">MINDFULNESS</div>
+            </div>
+            <ul class="mono" style="font-size: 11px; line-height: 1.6; opacity: 0.8; padding-left: 20px;">
+              <li>Practice 4-7-8 breathing now.</li>
+              <li>Try a 5-minute guided meditation.</li>
+              <li>Take a focus break from screens.</li>
+            </ul>
+          </div>
+          <div class="brutal-card dash-box" style="background: var(--cream);">
+            <div class="flex items-center mb-4">
+              <span style="font-size: 24px; margin-right: 12px;">🏃</span>
+              <div class="stat-label">ACTIVITY</div>
+            </div>
+            <ul class="mono" style="font-size: 11px; line-height: 1.6; opacity: 0.8; padding-left: 20px;">
+              <li>10-minute walk to clear your mind.</li>
+              <li>Release muscle tension with stretching.</li>
+              <li>Try gentle yoga poses.</li>
+            </ul>
+          </div>
+          <div class="brutal-card dash-box" style="background: var(--white);">
+            <div class="flex items-center mb-4">
+              <span style="font-size: 24px; margin-right: 12px;">🌿</span>
+              <div class="stat-label">LIFESTYLE</div>
+            </div>
+            <ul class="mono" style="font-size: 11px; line-height: 1.6; opacity: 0.8; padding-left: 20px;">
+              <li>Limit caffeine after 2:00 PM.</li>
+              <li>Prioritize 7-9 hours of sleep today.</li>
+              <li>Set boundaries for work-life balance.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════ JOURNAL HUB ══════════════════════════════ -->
+    <div id="page-journal" class="page">
+      <div class="container-sm" style="max-width: 1000px; padding: 20px;">
+        
+        <div class="dash-header" style="margin-bottom: 40px;">
+          <h1 class="hero-title" style="font-size: 32px; margin-bottom: 5px;">Zen Journal</h1>
+          <p class="mono" style="font-size: 14px; opacity: 0.6;">Your private, encrypted sanctuary</p>
+        </div>
+
+        <!-- SEARCH & MODES -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; gap: 15px; flex-wrap: wrap;">
+          <div style="flex: 1; position: relative; min-width: 250px;">
+            <input type="text" id="journal-search" class="input-brutal mono" style="width: 100%; padding: 12px 15px; font-size: 13px;" placeholder="Search your thoughts...">
+          </div>
+          <div style="display: flex; gap: 10px;">
+            <button id="journal-btn-mode-write" class="btn btn-primary" style="font-size: 12px; padding: 10px 20px;">NEW ENTRY</button>
+            <button id="journal-btn-mode-read" class="btn btn-secondary" style="font-size: 12px; padding: 10px 20px;">VIEW ARCHIVE</button>
+          </div>
+        </div>
+
+        <!-- WRITING MODE (DRAFTING SUITE) -->
+        <div id="journal-view-write" class="brutal-card dash-box" style="margin-bottom: 40px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+            <div class="stat-label" id="journal-form-title-label">DRAFT NEW ENTRY</div>
+            <div id="journal-encryption-badge" class="mono" style="font-size: 9px; color: var(--sage); display: flex; align-items: center; gap: 5px;">
+              <span style="font-size: 14px;">🔒</span> E2E ENCRYPTED
+            </div>
+          </div>
+
+          <div class="form-box" style="margin-bottom: 25px;">
+            <label class="mono" style="display: block; font-size: 11px; font-weight: 700; margin-bottom: 8px; opacity: 0.6;">TITLE</label>
+            <input type="text" id="journal-form-title" class="input-brutal mono" style="width: 100%; font-size: 18px; font-weight: 700;" placeholder="Title your entry...">
+          </div>
+
+          <div class="form-box" style="margin-bottom: 25px;">
+            <label class="mono" style="display: block; font-size: 11px; font-weight: 700; margin-bottom: 8px; opacity: 0.6;">THOUGHTS</label>
+            <textarea id="journal-form-content" class="input-brutal mono" style="width: 100%; min-height: 300px; padding: 20px; line-height: 1.6;" placeholder="What's on your mind? Be as raw as you need to be..."></textarea>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1.5fr; gap: 30px; margin-bottom: 30px;">
+            <div>
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <label class="mono" style="font-size: 11px; font-weight: 700; opacity: 0.6;">MOOD</label>
+                <span id="journal-form-mood-emoji" style="font-size: 20px;">😐</span>
+              </div>
+              <input type="range" id="journal-form-mood" class="custom-range" min="1" max="5" step="1" value="3">
+              <div class="mono" id="journal-form-mood-text" style="font-size: 9px; margin-top: 5px; text-align: center; font-weight: 700;">NEUTRAL</div>
+            </div>
+            <div>
+              <label class="mono" style="display: block; font-size: 11px; font-weight: 700; margin-bottom: 12px; opacity: 0.6;">TAGS</label>
+              <div id="journal-tags-container" class="tag-grid"></div>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 15px;">
+            <button id="journal-btn-save" class="btn btn-primary" style="flex: 2; padding: 15px; font-size: 14px;">SAVE ENTRY →</button>
+            <button id="journal-btn-cancel" class="btn btn-secondary" style="flex: 1; padding: 15px; font-size: 14px; display: none;">CANCEL EDIT</button>
+          </div>
+        </div>
+
+        <!-- ARCHIVE VIEW (LIST & FILTERS) -->
+        <div id="journal-view-read" style="display: none;">
+          <div class="brutal-card dash-box" style="margin-bottom: 30px; background: var(--cream);">
+            <div class="stat-label" style="margin-bottom: 15px;">FILTER BY TAGS</div>
+            <div id="journal-filter-tags-container" class="tag-grid"></div>
+            <button id="journal-btn-clear-filters" class="mono" style="background: none; border: none; font-size: 10px; margin-top: 15px; cursor: pointer; text-decoration: underline;">Clear all filters</button>
+          </div>
+
+          <div id="journal-entries-feed" class="space-y-6">
+            <!-- Entries injected here -->
+            <div class="text-center py-20 opacity-50 mono">Loading your archives...</div>
+          </div>
+        </div>
+      </div> <!-- Closes container-sm of Journal -->
+    </div> <!-- Closes #page-journal -->
+ 
+    <!-- ══════════════════════════════ RESOURCE LIBRARY ══════════════════════════════ -->
+    <div id="page-resources" class="page">
+      <div class="container-sm" style="max-width: 1100px; padding: 20px;">
+        
+        <div class="dash-header" style="margin-bottom: 40px;">
+          <div class="mono" style="font-size: 11px; font-weight: 800; color: var(--sage); letter-spacing: 1.5px; margin-bottom: 10px;">RESOURCE LIBRARY</div>
+          <h1 class="hero-title" style="font-size: 42px; margin-bottom: 10px; color: var(--text-dark);">Find what you need, right now.</h1>
+          <p class="mono" style="font-size: 15px; opacity: 0.6; color: var(--text-mid);">Curated by mental health professionals for young people in India. All resources are free.</p>
+        </div>
+
+        <!-- SEARCH & TABS -->
+        <div class="brutal-card" style="margin-bottom: 40px; background: var(--white); padding: 30px; border-radius: 12px; box-shadow: 6px 6px 0 rgba(0,0,0,0.05);">
+           <div style="position: relative; margin-bottom: 30px;">
+              <span style="position: absolute; left: 18px; top: 50%; transform: translateY(-50%); opacity: 0.4;">🔍</span>
+              <input type="text" id="res-search" class="input-brutal mono" style="width: 100%; padding-left: 50px; border-radius: 10px; box-shadow: none; border-color: #eee; background: #fafafa;" placeholder="Search resources...">
+           </div>
+           
+           <div style="display: flex; gap: 12px; flex-wrap: wrap;" id="res-tabs">
+              <button class="res-tab-btn chip selected" data-type="all">All Resources</button>
+              <button class="res-tab-btn chip" data-type="Helpline">📞 Helplines</button>
+              <button class="res-tab-btn chip" data-type="Article">📄 Articles</button>
+              <button class="res-tab-btn chip" data-type="Exercise">📘 Exercises</button>
+              <button class="res-tab-btn chip" data-type="Video">🎥 Videos</button>
+           </div>
+        </div>
+
+        <!-- EMERGENCY SECTION -->
+        <div id="res-emergency-section" class="brutal-card" style="display: block; margin-bottom: 40px; border-left: 6px solid var(--coral); padding: 30px 40px; background: var(--white); border-radius: 12px;">
+           <h2 class="hero-title" style="font-size: 24px; margin-bottom: 25px;">Emergency Resources</h2>
+           <div id="res-grid-emergency" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 25px;">
+              <!-- Emergency cards injected here -->
+           </div>
+        </div>
+
+        <!-- MAIN RESOURCE GRID -->
+        <div id="res-grid-main" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 30px;">
+           <!-- Dynamic resource cards injected here -->
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════ ACTIVITY HUB ══════════════════════════════ -->
+    <div id="page-activity" class="page">
+      <div class="container-sm" style="max-width: 1100px; padding: 20px;">
+        
+        <div class="dash-header" style="margin-bottom: 40px;">
+          <div class="mono" style="font-size: 11px; font-weight: 800; color: var(--sage); letter-spacing: 1.5px; margin-bottom: 10px;">ZEN SANCTUARY</div>
+          <h1 class="hero-title" style="font-size: 42px; margin-bottom: 10px; color: var(--text-dark);">Activity Hub</h1>
+          <p class="mono" style="font-size: 15px; opacity: 0.6; color: var(--text-mid);">Relax, refocus, and recharge with guided activities and soundscapes.</p>
+        </div>
+
+        <!-- 1. GUIDED EXERCISES (Videos) -->
+        <div class="section-label mono" style="margin-bottom: 20px; font-weight: 800; opacity: 0.4;">GUIDED EXERCISES</div>
+        <div class="brutal-card dash-box" style="margin-bottom: 40px; padding: 30px; background: var(--white);">
+           <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px;">
+              <!-- Video 1: Breathing -->
+              <div class="brutal-card" style="padding: 15px; background: #fafafa; border-radius: 8px;">
+                 <div style="width: 100%; height: 160px; background: #000; border-radius: 4px; display: flex; align-items: center; justify-content: center; color: white; font-size: 30px; margin-bottom: 15px;">▶</div>
+                 <h3 class="mono" style="font-size: 14px; font-weight: 800; margin-bottom: 5px;">Box Breathing</h3>
+                 <p class="mono" style="font-size: 11px; opacity: 0.6;">Regain calm in 4 minutes.</p>
+              </div>
+              <!-- Video 2: Body Scan -->
+              <div class="brutal-card" style="padding: 15px; background: #fafafa; border-radius: 8px;">
+                 <div style="width: 100%; height: 160px; background: #000; border-radius: 4px; display: flex; align-items: center; justify-content: center; color: white; font-size: 30px; margin-bottom: 15px;">▶</div>
+                 <h3 class="mono" style="font-size: 14px; font-weight: 800; margin-bottom: 5px;">Full Body Scan</h3>
+                 <p class="mono" style="font-size: 11px; opacity: 0.6;">Release physical tension.</p>
+              </div>
+              <!-- Video 3: Muscle Relaxation -->
+              <div class="brutal-card" style="padding: 15px; background: #fafafa; border-radius: 8px;">
+                 <div style="width: 100%; height: 160px; background: #000; border-radius: 4px; display: flex; align-items: center; justify-content: center; color: white; font-size: 30px; margin-bottom: 15px;">▶</div>
+                 <h3 class="mono" style="font-size: 14px; font-weight: 800; margin-bottom: 5px;">Muscle Relaxation</h3>
+                 <p class="mono" style="font-size: 11px; opacity: 0.6;">Progressive stress relief.</p>
+              </div>
+           </div>
+        </div>
+
+        <!-- 2. SOUNDSCAPES -->
+        <div class="section-label mono" style="margin-bottom: 20px; font-weight: 800; opacity: 0.4;">ATMOSPHERIC SOUNDSCAPES</div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; margin-bottom: 40px;">
+           <div class="brutal-card dash-box" style="background: #f8f8ff; border-radius: 12px; padding: 30px; border-color: #e0e0ff;">
+              <div style="font-size: 40px; margin-bottom: 20px;">🎧</div>
+              <h3 style="font-size: 20px; margin-bottom: 10px;">Lofi Focus</h3>
+              <p class="mono" style="font-size: 12px; opacity: 0.6; margin-bottom: 25px;">Chilled beats for deep study sessions.</p>
+              <button class="btn btn-secondary mono" style="width: 100%; font-size: 12px;">PLAY</button>
+           </div>
+           <div class="brutal-card dash-box" style="background: #f0f7ff; border-radius: 12px; padding: 30px; border-color: #d0e0ff;">
+              <div style="font-size: 40px; margin-bottom: 20px;">🌧️</div>
+              <h3 style="font-size: 20px; margin-bottom: 10px;">Rainy Sanctuary</h3>
+              <p class="mono" style="font-size: 12px; opacity: 0.6; margin-bottom: 25px;">Natural white noise for peace of mind.</p>
+              <button class="btn btn-secondary mono" style="width: 100%; font-size: 12px;">PLAY</button>
+           </div>
+           <div class="brutal-card dash-box" style="background: #f0fff4; border-radius: 12px; padding: 30px; border-color: #d0ffe0;">
+              <div style="font-size: 40px; margin-bottom: 20px;">🌊</div>
+              <h3 style="font-size: 20px; margin-bottom: 10px;">Ocean Waves</h3>
+              <p class="mono" style="font-size: 12px; opacity: 0.6; margin-bottom: 25px;">Rhythmic tides for relaxation.</p>
+              <button class="btn btn-secondary mono" style="width: 100%; font-size: 12px;">PLAY</button>
+           </div>
+        </div>
+
+        <!-- 3. MINDFUL GAMES -->
+        <div class="section-label mono" style="margin-bottom: 20px; font-weight: 800; opacity: 0.4;">MINDFUL GAMES</div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px;">
+           <div class="brutal-card dash-box" style="background: var(--white); border-radius: 12px; padding: 40px; text-align: center;">
+              <div style="font-size: 48px; margin-bottom: 25px;">🧩</div>
+              <h3 style="font-size: 22px; margin-bottom: 10px;">Pattern Focus</h3>
+              <p class="mono" style="font-size: 13px; opacity: 0.7; margin-bottom: 30px;">Sharpen your concentration with calming patterns.</p>
+              <button class="btn btn-primary mono" style="padding: 10px 40px;">LAUNCH</button>
+           </div>
+           <div class="brutal-card dash-box" style="background: var(--white); border-radius: 12px; padding: 40px; text-align: center;">
+              <div style="font-size: 48px; margin-bottom: 25px;">🎈</div>
+              <h3 style="font-size: 22px; margin-bottom: 10px;">Zen Popper</h3>
+              <p class="mono" style="font-size: 13px; opacity: 0.7; margin-bottom: 30px;">A satisfyng sensory game for stress relief.</p>
+              <button class="btn btn-primary mono" style="padding: 10px 40px;">LAUNCH</button>
+           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════ SETTINGS PAGE ══════════════════════════════ -->
+    <div id="page-settings" class="page">
+      <div class="container-sm" style="max-width: 900px; padding: 20px;">
+
+        <div class="dash-header" style="margin-bottom: 40px;">
+          <div class="mono" style="font-size: 11px; font-weight: 700; color: var(--sage); letter-spacing: 1.5px; margin-bottom: 10px;">ACCOUNT CONTROL</div>
+          <h1 class="hero-title" style="font-size: 42px; margin-bottom: 8px;">Settings</h1>
+          <p class="mono" style="font-size: 14px; opacity: 0.6;">Manage your profile, health goals, and privacy preferences.</p>
+        </div>
+
+        <!-- SAVE BANNER -->
+        <div id="settings-save-banner" style="display: none; padding: 14px 20px; background: var(--sage); border: var(--border); margin-bottom: 30px;">
+          <span class="mono" style="font-weight: 800; font-size: 13px;">✅ SETTINGS SAVED SUCCESSFULLY</span>
+        </div>
+
+        <!-- SECTION 1: PROFILE -->
+        <div class="brutal-card" style="padding: 35px; margin-bottom: 30px;">
+          <div class="mono" style="font-size: 11px; font-weight: 800; letter-spacing: 1.5px; color: var(--sage); margin-bottom: 20px;">01 — PROFILE IDENTITY</div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+            <div class="form-box">
+              <label class="form-label">DISPLAY NAME</label>
+              <input type="text" id="set-display-name" class="input-brutal" placeholder="e.g. Arjun S.">
+            </div>
+            <div class="form-box">
+              <label class="form-label">EMAIL (read-only)</label>
+              <input type="email" id="set-email" class="input-brutal" placeholder="your@email.com" readonly style="opacity: 0.5; cursor: not-allowed;">
+            </div>
+            <div class="form-box">
+              <label class="form-label">AGE</label>
+              <input type="number" id="set-age" class="input-brutal" placeholder="e.g. 20" min="10" max="100">
+            </div>
+            <div class="form-box">
+              <label class="form-label">GENDER IDENTITY</label>
+              <select id="set-gender" class="input-brutal">
+                <option value="">Select...</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="non-binary">Non-binary</option>
+                <option value="prefer-not-to-say">Prefer not to say</option>
+              </select>
+            </div>
+            <div class="form-box" style="grid-column: 1/-1;">
+              <label class="form-label">SHORT BIO (optional)</label>
+              <textarea id="set-bio" class="input-brutal" style="min-height: 80px;" placeholder="Tell us a little about yourself..."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 2: HEALTH GOALS -->
+        <div class="brutal-card" style="padding: 35px; margin-bottom: 30px;">
+          <div class="mono" style="font-size: 11px; font-weight: 800; letter-spacing: 1.5px; color: var(--sage); margin-bottom: 20px;">02 — HEALTH GOALS</div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px;">
+            <div class="form-box">
+              <label class="form-label">MOOD TARGET (1–10)</label>
+              <input type="number" id="set-mood-goal" class="input-brutal" min="1" max="10" placeholder="e.g. 7">
+            </div>
+            <div class="form-box">
+              <label class="form-label">DAILY SLEEP GOAL (hrs)</label>
+              <input type="number" id="set-sleep-goal" class="input-brutal" min="4" max="12" step="0.5" placeholder="e.g. 8">
+            </div>
+            <div class="form-box">
+              <label class="form-label">STRESS LIMIT (1–10)</label>
+              <input type="number" id="set-stress-goal" class="input-brutal" min="1" max="10" placeholder="e.g. 5">
+            </div>
+            <div class="form-box">
+              <label class="form-label">PRIMARY FOCUS</label>
+              <select id="set-focus" class="input-brutal">
+                <option value="">Select focus area...</option>
+                <option value="stress">Stress Reduction</option>
+                <option value="sleep">Better Sleep</option>
+                <option value="mood">Mood Improvement</option>
+                <option value="anxiety">Anxiety Management</option>
+                <option value="social">Social Connection</option>
+                <option value="all">Overall Wellbeing</option>
+              </select>
+            </div>
+            <div class="form-box">
+              <label class="form-label">DAILY CHECK-IN REMINDER</label>
+              <input type="time" id="set-reminder-time" class="input-brutal" value="09:00">
+            </div>
+            <div class="form-box">
+              <label class="form-label">EXPERIENCE LEVEL</label>
+              <select id="set-experience" class="input-brutal">
+                <option value="beginner">Beginner</option>
+                <option value="intermediate">Intermediate</option>
+                <option value="advanced">Advanced</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 3: EMERGENCY CONTACT -->
+        <div class="brutal-card" style="padding: 35px; margin-bottom: 30px; border-color: var(--coral);">
+          <div class="mono" style="font-size: 11px; font-weight: 800; letter-spacing: 1.5px; color: var(--coral); margin-bottom: 6px;">03 — EMERGENCY CONTACT</div>
+          <p class="mono" style="font-size: 11px; opacity: 0.6; margin-bottom: 20px;">If a crisis is detected, NyxWell can display this contact. Never shared publicly.</p>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+            <div class="form-box">
+              <label class="form-label">CONTACT NAME</label>
+              <input type="text" id="set-ec-name" class="input-brutal" placeholder="e.g. Mom / Best Friend">
+            </div>
+            <div class="form-box">
+              <label class="form-label">CONTACT PHONE</label>
+              <input type="tel" id="set-ec-phone" class="input-brutal" placeholder="+91 XXXXX XXXXX">
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 4: NOTIFICATIONS -->
+        <div class="brutal-card" style="padding: 35px; margin-bottom: 30px;">
+          <div class="mono" style="font-size: 11px; font-weight: 800; letter-spacing: 1.5px; color: var(--sage); margin-bottom: 20px;">04 — NOTIFICATIONS</div>
+          <div class="space-y-4">
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 1px solid #eee;">
+              <div>
+                <div class="mono" style="font-weight: 800; font-size: 13px;">Daily Check-in Reminder</div>
+                <div class="mono" style="font-size: 11px; opacity: 0.6;">Nudge to log your mood, sleep and stress.</div>
+              </div>
+              <label class="toggle-switch"><input type="checkbox" id="set-notif-checkin" checked><span class="toggle-slider"></span></label>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 1px solid #eee;">
+              <div>
+                <div class="mono" style="font-weight: 800; font-size: 13px;">Weekly Wellness Report</div>
+                <div class="mono" style="font-size: 11px; opacity: 0.6;">Summary of your week's mental health trends.</div>
+              </div>
+              <label class="toggle-switch"><input type="checkbox" id="set-notif-weekly" checked><span class="toggle-slider"></span></label>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 14px 0;">
+              <div>
+                <div class="mono" style="font-weight: 800; font-size: 13px;">Mentor Messages</div>
+                <div class="mono" style="font-size: 11px; opacity: 0.6;">Alerts when a peer mentor responds to you.</div>
+              </div>
+              <label class="toggle-switch"><input type="checkbox" id="set-notif-mentor" checked><span class="toggle-slider"></span></label>
+            </div>
+          </div>
+        </div>
+
+        <!-- SAVE BUTTON -->
+        <div style="display: flex; gap: 16px; align-items: center; margin-bottom: 40px;">
+          <button id="btn-save-settings" class="btn btn-primary" style="padding: 16px 40px; font-size: 14px;">
+            💾 SAVE ALL SETTINGS
+          </button>
+          <button id="btn-reset-settings" class="btn btn-secondary" style="padding: 16px 24px; font-size: 13px;">
+            RESET TO DEFAULTS
+          </button>
+        </div>
+
+        <!-- SECTION 5: DANGER ZONE -->
+        <div class="brutal-card" style="padding: 35px; border-color: var(--coral); background: #fff8f8;">
+          <div class="mono" style="font-size: 11px; font-weight: 800; letter-spacing: 1.5px; color: var(--coral); margin-bottom: 10px;">⚠️ DANGER ZONE</div>
+          <p class="mono" style="font-size: 12px; opacity: 0.7; margin-bottom: 24px;">These actions are permanent and cannot be undone.</p>
+          <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+            <button id="btn-export-data" class="btn btn-secondary" style="font-size: 12px; padding: 12px 20px; border-color: var(--sage); color: var(--sage);">
+              📦 EXPORT MY DATA (JSON)
+            </button>
+            <button id="btn-delete-account" class="btn btn-secondary" style="font-size: 12px; padding: 12px 20px; border-color: var(--coral); color: var(--coral);">
+              🗑️ DELETE ACCOUNT
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <!-- ══════════════════════════════ END SETTINGS ══════════════════════════════ -->
+
+    <!-- PAGE: COMMUNITY -->
+
+    <div id="page-community" class="page">
+        <!-- HUB HEADER -->
+        <div class="brutal-card dash-box" style="margin-bottom: 30px; background: var(--white); min-height: auto; padding: 30px;">
+          <div style="display: flex; justify-content: space-between; align-items: start;">
+            <div>
+              <h1 class="hero-title" style="font-size: 32px; margin-bottom: 8px;">Community Connection</h1>
+              <p class="mono" style="font-size: 14px; opacity: 0.7;">Connect with others on their mental wellness journey, share experiences, and find support.</p>
+            </div>
+            <button class="btn-secondary" style="width: 44px; height: 44px; border-radius: 50%; padding: 0; display: flex; align-items: center; justify-content: center; font-size: 20px;">🔔</button>
+          </div>
+
+          <!-- HUB SWITCHER -->
+          <div style="display: flex; background: var(--text-dark); padding: 5px; border-radius: 8px; margin-top: 25px; width: fit-content; gap: 5px;">
+            <button id="comm-tab-btn-discovery" class="btn mono active" style="background: var(--text-mid); color: var(--white); border: none; box-shadow: none; padding: 8px 25px; font-size: 13px;">Communities</button>
+            <button id="comm-tab-btn-mentorship" class="btn mono" style="background: transparent; color: var(--cream); border: none; box-shadow: none; padding: 8px 25px; font-size: 13px;">Peer Mentors</button>
+          </div>
+        </div>
+
+        <!-- ── HUB 1: COMMUNITIES ── -->
+        <div id="comm-view-discovery">
+          <!-- Discovery Toolbar -->
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; flex-wrap: wrap; gap: 15px;">
+            <div style="display: flex; gap: 20px; border-bottom: 2px solid #ddd; padding-bottom: 5px;">
+              <button class="mono comm-filter-btn active" data-filter="all" style="background:none; border:none; border-bottom: 2px solid var(--sage); color: var(--sage); font-weight: 700; cursor: pointer; padding: 5px 10px;">All Communities</button>
+              <button class="mono comm-filter-btn" data-filter="my" style="background:none; border:none; color: var(--text-light); cursor: pointer; padding: 5px 10px;">My Communities</button>
+              <button class="mono comm-filter-btn" data-filter="popular" style="background:none; border:none; color: var(--text-light); cursor: pointer; padding: 5px 10px;">Popular</button>
+            </div>
+            
+            <div style="display: flex; gap: 15px; flex: 1; justify-content: flex-end; align-items: center; min-width: 300px;">
+              <div style="position: relative; flex: 1; max-width: 400px;">
+                <input type="text" id="comm-search" class="input-brutal mono" style="width: 100%; padding: 10px 40px 10px 15px; font-size: 13px;" placeholder="Search communities...">
+                <span style="position: absolute; right: 15px; top: 10px; opacity: 0.5;">🔍</span>
+              </div>
+              <button id="comm-btn-create" class="btn btn-primary" style="padding: 10px 20px; font-size: 13px;">+ Create Community</button>
+            </div>
+          </div>
+
+          <!-- Community Grid -->
+          <div id="comm-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 30px;">
+            <!-- Community Cards Injected Here -->
+            <div class="mono opacity-50 text-center py-20" style="grid-column: 1/-1;">Loading communities...</div>
+          </div>
+        </div>
+
+        <!-- ── HUB 2: PEER MENTORS ── -->
+        <div id="comm-view-mentorship" style="display: none;">
+          <!-- Mentorship Header -->
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+            <div style="display: flex; gap: 20px;">
+              <button class="mono mentor-filter-btn active" data-mode="find" style="background:none; border:none; border-bottom: 2px solid var(--sage); color: var(--sage); font-weight: 700; cursor: pointer; padding: 5px 5px;">Find Mentors</button>
+              <button class="mono mentor-filter-btn" data-mode="my" style="background:none; border:none; color: var(--text-light); cursor: pointer; padding: 5px 5px;">My Mentorships</button>
+            </div>
+            <div style="display: flex; gap: 10px;">
+              <button id="mentor-btn-onboard" class="btn-secondary" style="padding: 8px 20px; font-size: 12px; font-weight: 700;">Become a Mentor</button>
+              <button id="mentor-btn-match" class="btn btn-primary" style="padding: 10px 20px; font-size: 12px; font-weight: 700;">Get Matched ✨</button>
+            </div>
+          </div>
+
+          <!-- Filters -->
+          <div class="brutal-card" style="padding: 15px; margin-bottom: 30px; background: var(--white); box-shadow: 2px 2px 0 var(--text-dark);">
+            <div style="position: relative; margin-bottom: 15px;">
+              <input type="text" id="mentor-search" class="input-brutal mono" style="width: 100%; padding: 12px 15px; font-size: 14px;" placeholder="Search by name or expertise...">
+            </div>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+              <span class="mono" style="font-size: 10px; font-weight: 800; opacity: 0.6; margin-right: 5px;">CATEGORIES:</span>
+              <button class="tag-btn mono selected" data-expertise="all">All</button>
+              <button class="tag-btn mono" data-expertise="Anxiety">Anxiety</button>
+              <button class="tag-btn mono" data-expertise="Sleep">Sleep</button>
+              <button class="tag-btn mono" data-expertise="Depression">Depression</button>
+              <button class="tag-btn mono" data-expertise="Stress">Stress</button>
+              <button class="tag-btn mono" data-expertise="Mindfulness">Mindfulness</button>
+              <button class="tag-btn mono" data-expertise="Trauma">Trauma</button>
+              <button class="tag-btn mono" data-expertise="ADHD">ADHD</button>
+              <button class="tag-btn mono" data-expertise="Burnout">Burnout</button>
+            </div>
+          </div>
+
+          <!-- Mentor Grid (Finding) -->
+          <div id="mentor-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 30px;">
+            <!-- Find Mentor Cards Injected Here -->
+          </div>
+
+          <!-- My Mentorships List -->
+          <div id="mentor-grid-my" style="display: none; grid-template-columns: 1fr; gap: 20px;">
+            <!-- Pending/Active Mentorships Injected Here -->
+          </div>
+
+          <!-- Become a Peer Mentor Form (Redesigned High-Fidelity) -->
+          <div id="mentor-form-onboard" class="brutal-card" style="display: none; max-width: 600px; margin: 30px auto; padding: 40px; border-radius: 20px; box-shadow: 0 15px 40px rgba(94, 79, 232, 0.15);">
+            <h2 class="hero-title" style="font-size: 32px; margin-bottom: 25px; color: #5E4FE8;">Become a Peer Mentor</h2>
+            <p class="mono" style="font-size: 14px; opacity: 0.7; margin-bottom: 35px; line-height: 1.6;">Share your experience and support others on their journey. Your application will be processed instantly for this demo.</p>
+            
+            <div class="form-box" style="margin-bottom: 30px;">
+              <label class="form-label" style="font-size: 11px; letter-spacing: 1px; color: var(--text-light);">YOUR BIO (TELL US ABOUT YOUR EXPERIENCE)</label>
+              <textarea id="mentor-form-bio" class="input-brutal mono" style="min-height: 160px; padding: 20px; font-size: 14px; background: rgba(243, 243, 255, 0.5); border: 1px solid #eee; box-shadow: none; border-radius: 12px;" 
+                        placeholder="e.g. 'I've managed work stress for 5 years and want to help others with coping strategies...'"></textarea>
+            </div>
+
+            <div class="form-box" style="margin-bottom: 40px;">
+              <label class="form-label" style="font-size: 11px; letter-spacing: 1px; color: var(--text-light);">SELECT YOUR EXPERTISE</label>
+              <div id="mentor-expertise-onboard" style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 15px;">
+                <!-- Tags injected here by JS: Anxiety, Sleep, Depression, Stress, Mindfulness, ADHD, Burnout, OCD, Trauma, Addiction -->
+              </div>
+            </div>
+
+            <button id="mentor-btn-submit" class="btn" style="width: 100%; padding: 22px; font-size: 16px; font-weight: 800; background: #5E4FE8; border: none; color: #fff; border-radius: 12px; cursor: pointer; box-shadow: 0 10px 20px rgba(94, 79, 232, 0.3);">Join the Network 🥳</button>
+            <button id="mentor-btn-cancel" class="mono" style="width: 100%; background: none; border: none; margin-top: 20px; cursor: pointer; opacity: 0.5; font-size: 12px;">Wait, I'm not ready yet</button>
+          </div>
+
+          <!-- Get Matched Quiz Modal (High-Fidelity 3-Step) -->
+          <div id="mentor-quiz-modal" class="modal-overlay" style="display: none;">
+             <div class="brutal-card" style="max-width: 500px; padding: 40px; border-radius: 15px; position: relative;">
+                <button id="quiz-close" style="position: absolute; top: 20px; right: 20px; background: none; border: none; cursor: pointer; font-size: 18px; opacity: 0.5;">✕</button>
+                
+                <!-- Step 1: Goal -->
+                <div id="quiz-step-1">
+                   <div class="mono" style="font-size: 10px; font-weight: 800; opacity: 0.4; margin-bottom: 5px;">STEP 1/3</div>
+                   <h3 class="hero-title" style="margin-bottom: 25px; font-size: 26px;">What brings you here today?</h3>
+                   <div style="display: flex; flex-direction: column; gap: 12px;">
+                      <button class="quiz-opt-btn tag-btn mono" data-step="1" data-val="Anxiety">Overcoming Panic/Anxiety</button>
+                      <button class="quiz-opt-btn tag-btn mono" data-val="Stress">Managing Workplace Stress</button>
+                      <button class="quiz-opt-btn tag-btn mono" data-val="Sleep">Improving Sleep Hygiene</button>
+                      <button class="quiz-opt-btn tag-btn mono" data-val="ADHD">Navigating Focus & ADHD</button>
+                      <button class="quiz-opt-btn tag-btn mono" data-val="Burnout">Recovering from Burnout</button>
+                      <button class="quiz-opt-btn tag-btn mono" data-val="Trauma">Processing Trauma</button>
+                   </div>
+                </div>
+
+                <!-- Step 2: Emotion -->
+                <div id="quiz-step-2" style="display: none;">
+                   <div class="mono" style="font-size: 10px; font-weight: 800; opacity: 0.4; margin-bottom: 5px;">STEP 2/3</div>
+                   <h3 class="hero-title" style="margin-bottom: 25px; font-size: 26px;">How are you feeling right now?</h3>
+                   <div style="display: flex; flex-direction: column; gap: 12px;">
+                      <button class="quiz-opt-btn tag-btn mono" data-step="2" data-val="Overwhelmed">"I'm feeling completely overwhelmed"</button>
+                      <button class="quiz-opt-btn tag-btn mono" data-val="Exhausted">"I'm emotionally exhausted"</button>
+                      <button class="quiz-opt-btn tag-btn mono" data-val="Seeking Growth">"I'm ready for growth and learning"</button>
+                      <button class="quiz-opt-btn tag-btn mono" data-val="Just Exploring">"I'm just exploring my options"</button>
+                   </div>
+                </div>
+
+                <!-- Step 3: Priority -->
+                <div id="quiz-step-3" style="display: none;">
+                   <div class="mono" style="font-size: 10px; font-weight: 800; opacity: 0.4; margin-bottom: 5px;">STEP 3/3</div>
+                   <h3 class="hero-title" style="margin-bottom: 25px; font-size: 26px;">How would you like to connect?</h3>
+                   <div style="display: flex; flex-direction: column; gap: 12px;">
+                      <button class="quiz-opt-btn tag-btn mono" data-step="3" data-val="Immediate">"I need immediate support"</button>
+                      <button class="quiz-opt-btn tag-btn mono" data-val="Long-term">"I'm looking for a long-term mentor"</button>
+                      <button class="quiz-opt-btn tag-btn mono" data-val="Once-off">"I just need a quick once-off session"</button>
+                   </div>
+                </div>
+
+                <div id="quiz-loading" style="display: none; text-align: center; padding: 40px;">
+                   <div class="user-avatar" style="width: 60px; height: 60px; border: var(--border); font-size: 24px; margin: 0 auto 20px;">✨</div>
+                   <div class="mono" style="font-size: 14px; font-weight: 800;">Finding your perfect matches...</div>
+                </div>
+             </div>
+          </div>
+        </div>
+
+        <!-- ── HUB 3: COMMUNITY DETAIL VIEW ── -->
+        <div id="comm-view-detail" style="display: none;">
+          <!-- Detail Hero -->
+          <div id="comm-detail-hero" class="brutal-card" style="padding: 0; overflow: hidden; margin-bottom: 30px;">
+            <div id="comm-detail-banner" style="height: 200px; background-size: cover; background-position: center; position: relative;">
+               <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);"></div>
+               <button id="comm-detail-back" style="position: absolute; top: 20px; left: 20px; background: rgba(255,255,255,0.9); border: none; padding: 8px 15px; cursor: pointer; font-weight: 700; border-radius: 4px;">← BACK</button>
+               <div style="position: absolute; bottom: 20px; left: 30px;">
+                 <h2 id="comm-detail-title" class="hero-title" style="color: var(--white); font-size: 32px; margin: 0;">Community Title</h2>
+                 <div style="display: flex; gap: 8px; margin-top: 8px;" id="comm-detail-tags"></div>
+                 <div class="mono" id="comm-detail-stats" style="color: var(--white); font-size: 11px; margin-top: 8px; opacity: 0.8;">1 Member</div>
+               </div>
+               <button id="comm-btn-membership-toggle" class="btn-secondary" style="position: absolute; bottom: 20px; right: 30px; padding: 10px 25px; font-size: 13px;">JOIN</button>
+            </div>
+          </div>
+
+          <!-- Detail Tabs -->
+          <div style="display: flex; gap: 30px; border-bottom: 2px solid #ddd; padding-bottom: 5px; margin-bottom: 30px;">
+             <button class="mono comm-detail-tab-btn active" data-tab="discussion" style="background:none; border:none; color: var(--sage); border-bottom: 2px solid var(--sage); font-weight: 700; cursor: pointer; padding: 10px 5px;">Discussion</button>
+             <button class="mono comm-detail-tab-btn" data-tab="chat" style="background:none; border:none; color: var(--text-light); cursor: pointer; padding: 10px 5px;">Live Chat</button>
+             <button class="mono comm-detail-tab-btn" data-tab="members" style="background:none; border:none; color: var(--text-light); cursor: pointer; padding: 10px 5px;">Members</button>
+             <button class="mono comm-detail-tab-btn" data-tab="about" style="background:none; border:none; color: var(--text-light); cursor: pointer; padding: 10px 5px;">About</button>
+          </div>
+
+          <!-- Detail Content Areas -->
+          <div id="comm-detail-discussion" class="space-y-6">
+            <div class="brutal-card dash-box" style="padding: 20px; min-height: auto; margin-bottom: 25px;">
+              <textarea id="comm-post-input" class="input-brutal mono" style="width: 100%; border: none; box-shadow: none; min-height: 80px;" placeholder="Share something with the community..."></textarea>
+              <div style="display: flex; justify-content: flex-end; padding-top: 15px; border-top: 1px solid #eee;">
+                <button id="comm-btn-post" class="btn btn-primary" style="padding: 8px 25px; font-size: 13px;">Post</button>
+              </div>
+            </div>
+            <div id="comm-posts-list" class="space-y-6">
+               <!-- Posts injected here -->
+            </div>
+          </div>
+
+          <div id="comm-detail-chat" style="display: none;">
+            <div class="brutal-card" style="height: 500px; display: flex; flex-direction: column; padding: 0;">
+               <div id="comm-chat-messages" style="flex: 1; overflow-y: auto; padding: 20px;" class="space-y-3">
+                 <!-- Messages injected here -->
+               </div>
+               <div style="padding: 20px; background: var(--cream); border-top: var(--border);">
+                 <div style="display: flex; gap: 10px;">
+                    <input type="text" id="comm-chat-input" class="input-brutal mono" style="flex: 1; padding: 12px 15px;" placeholder="Message live chat...">
+                    <button id="comm-chat-send" class="btn btn-primary" style="padding: 0 25px;">SEND</button>
+                 </div>
+               </div>
+            </div>
+          </div>
+
+          <div id="comm-detail-members" style="display: none;">
+            <div class="brutal-card dash-box" style="padding: 30px; background: var(--white); min-height: 400px;">
+               <div class="stat-label" style="margin-bottom: 20px;">COMMUNITY MEMBERS</div>
+               <div id="comm-members-list" class="space-y-3">
+                  <!-- Members injected here -->
+               </div>
+            </div>
+          </div>
+
+          <div id="comm-detail-about" style="display: none;">
+            <div class="brutal-card dash-box" style="padding: 40px; background: var(--white); min-height: 400px;">
+               <div class="stat-label" style="margin-bottom: 20px;">ABOUT THIS SPACE</div>
+               <div id="comm-detail-about-content" class="mono" style="font-size: 14px; line-height: 1.8; opacity: 0.8;">
+                  <!-- About info injected here -->
+               </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    <!-- CREATE COMMUNITY MODAL -->
+    <div id="comm-modal-create" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 1050; align-items: center; justify-content: center; padding: 20px;">
+      <div class="brutal-card" style="background: var(--white); width: 100%; max-width: 500px; padding: 40px; position: relative;">
+        <button id="comm-create-close" style="position: absolute; top: 20px; right: 20px; background: none; border: none; font-size: 30px; cursor: pointer;">×</button>
+        <h2 class="hero-title" style="font-size: 28px; margin-bottom: 25px;">Create Safe Space</h2>
+        
+        <div class="form-box">
+          <label class="form-label">COMMUNITY NAME</label>
+          <input type="text" id="comm-new-name" class="input-brutal mono" placeholder="e.g. Daily Gratitude Group">
+        </div>
+
+        <div class="form-box">
+          <label class="form-label">CATEGORY</label>
+          <select id="comm-new-category" class="input-brutal mono" style="background: var(--white);">
+            <option value="Stress">Stress Management</option>
+            <option value="Anxiety">Anxiety Support</option>
+            <option value="Sleep">Sleep Hygiene</option>
+            <option value="Mindfulness">Mindfulness</option>
+            <option value="Grief">Grief & Loss</option>
+            <option value="Trauma">Trauma Support</option>
+            <option value="General">General Wellness</option>
+          </select>
+        </div>
+
+        <div class="form-box">
+          <label class="form-label">DESCRIPTION</label>
+          <textarea id="comm-new-desc" class="input-brutal mono" style="min-height: 100px;" placeholder="What is this community about?"></textarea>
+        </div>
+
+        <button id="comm-btn-submit-create" class="btn btn-primary" style="width: 100%; padding: 15px; font-size: 14px; margin-top: 10px;">LAUNCH COMMUNITY 🚀</button>
+      </div>
+    </div>
+
+    <!-- ENTRY LIGHTBOX (FOCUSED READING) -->
+    <div id="journal-lightbox" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center; padding: 20px;">
+      <div class="brutal-card" style="background: var(--white); width: 100%; max-width: 800px; max-height: 90vh; overflow-y: auto; padding: 40px; position: relative;">
+        <button id="journal-lightbox-close" style="position: absolute; top: 20px; right: 20px; background: none; border: none; font-size: 30px; cursor: pointer;">×</button>
+        
+        <div id="journal-lightbox-content">
+          <!-- Full entry content -->
+        </div>
+      </div>
+    </div>
+
+    <!-- MENTORSHIP CHAT LIGHTBOX (PRIVATE SESSIONS) -->
+    <div id="mentorship-chat-modal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 1100; align-items: center; justify-content: center; padding: 20px;">
+      <div class="brutal-card" style="background: var(--white); width: 100%; max-width: 600px; height: 650px; display: flex; flex-direction: column; padding: 0; position: relative;">
+        <!-- Header -->
+        <div style="padding: 25px; border-bottom: var(--border); display: flex; justify-content: space-between; align-items: center; background: var(--sage-light);">
+           <div>
+             <div class="mono" style="font-size: 10px; font-weight: 800; opacity: 0.6;">PRIVATE SESSION</div>
+             <h3 id="mentor-chat-partner" style="margin: 0; font-size: 20px;">Mentor Name</h3>
+           </div>
+           <button id="mentor-chat-close" style="background: none; border: none; font-size: 24px; cursor: pointer;">×</button>
+        </div>
+        
+        <!-- Messages -->
+        <div id="mentor-chat-messages" style="flex: 1; overflow-y: auto; padding: 30px;" class="space-y-4">
+           <!-- Private messages injected here -->
+        </div>
+
+        <!-- Footer -->
+        <div style="padding: 25px; background: var(--cream); border-top: var(--border);">
+           <div style="display: flex; gap: 15px;">
+              <input type="text" id="mentor-chat-input" class="input-brutal mono" style="flex: 1; padding: 12px 15px;" placeholder="Type your message here...">
+              <button id="mentor-chat-send" class="btn btn-primary" style="padding: 0 20px;">SEND</button>
+           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── ACTIVITY HUB GAME OVERLAY ── -->
+    <div id="activity-game-overlay" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); backdrop-filter: blur(10px); z-index: 2000; flex-direction: column; align-items: center; justify-content: center; padding: 40px;">
+       <div class="dash-header" style="text-align: center; margin-bottom: 30px;">
+          <h2 id="game-title" class="hero-title" style="color: var(--white); font-size: 32px; margin-bottom: 10px;">Game Name</h2>
+          <p id="game-subtitle" class="mono" style="color: var(--sage-light); font-size: 14px;">Focused on your wellbeing.</p>
+       </div>
+       
+       <!-- Game Canvas -->
+       <div class="brutal-card" style="background: #111; border-color: #333; padding: 0; overflow: hidden; position: relative;">
+          <canvas id="activity-game-canvas" width="600" height="400" style="display: block;"></canvas>
+       </div>
+
+       <button id="activity-game-close" class="btn btn-secondary mono" style="margin-top: 40px; padding: 12px 30px;">RETURN TO SANCTUARY →</button>
+    </div>
+    <!-- ══════════════════════════════ NGO DIRECTORY (ADMIN) ════════════════════════════ -->
+    <style>
+      .table-brutal { width: 100%; border-collapse: collapse; background: var(--white); }
+      .table-brutal th { background: var(--text-dark); color: var(--cream); text-align: left; padding: 15px 20px; font-size: 11px; letter-spacing: 1px; font-family: 'Space Mono', monospace; border-right: 1px solid rgba(255,255,255,0.1); }
+      .table-brutal td { padding: 20px; border-bottom: var(--border-width) solid var(--text-dark); vertical-align: middle; border-right: var(--border-width) solid #eee; }
+      .table-brutal tr:hover { background: #fafafa; }
+      .table-brutal td:last-child, .table-brutal th:last-child { border-right: none; }
+      .ngo-badge { display: inline-block; padding: 4px 10px; border-radius: 4px; font-size: 10px; font-weight: 800; font-family: 'Space Mono', monospace; text-transform: uppercase; border: 1px solid transparent; }
+      .btn-table { padding: 6px 12px; font-size: 10px; font-weight: 800; border: var(--border); background: var(--white); cursor: pointer; transition: 0.1s; font-family: 'Space Mono', monospace; }
+      .btn-table:hover { background: var(--text-dark); color: var(--cream); }
+    </style>
+    <div id="page-ngo-directory" class="page">
+      <div class="dash-container">
+        <main style="padding: 40px; overflow-y: auto;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 40px;">
+            <div>
+              <div class="mono" style="font-size: 12px; font-weight: 700; color: var(--sage);">RESOURCE INFRASTRUCTURE</div>
+              <h1 class="hero-title" style="font-size: 36px;">Support Directory</h1>
+            </div>
+            <div style="display: flex; gap: 10px;">
+               <button class="btn btn-secondary" id="btn-seed-ngo" style="font-size: 11px; padding: 12px 20px; border-color: var(--sage); color: var(--sage);">💉 INJECT SEED DATA</button>
+               <button class="btn btn-primary" id="btn-add-ngo" style="font-size: 11px; padding: 12px 20px;">+ ADD RESOURCE</button>
+            </div>
+          </div>
+
+          <div class="brutal-card" style="padding: 0; overflow: hidden;">
+             <table class="table-brutal" id="ngo-admin-table">
+                <thead>
+                   <tr>
+                      <th>NAME</th>
+                      <th>CATEGORY</th>
+                      <th>TIMING</th>
+                      <th>HELP?</th>
+                      <th>STATUS</th>
+                      <th>ACTIONS</th>
+                   </tr>
+                </thead>
+                <tbody id="ngo-admin-list">
+                   <!-- NGOs injected here -->
+                   <tr>
+                      <td colspan="6" class="mono" style="padding: 40px; text-align: center; opacity: 0.4;">SYNCING WITH SECURE DATABASE...</td>
+                   </tr>
+                </tbody>
+             </table>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <!-- NGO ENTRY MODAL (CREATE/EDIT) -->
+    <div id="ngo-modal-manage" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 1050; align-items: center; justify-content: center; padding: 20px;">
+      <div class="brutal-card" style="background: var(--white); width: 100%; max-width: 600px; max-height: 90vh; overflow-y: auto; padding: 40px; position: relative;">
+        <button id="ngo-modal-close" style="position: absolute; top: 20px; right: 20px; background: none; border: none; font-size: 30px; cursor: pointer;">×</button>
+        <h2 class="hero-title" style="font-size: 28px; margin-bottom: 25px;">Manage Resource</h2>
+        
+        <input type="hidden" id="ngo-edit-id">
+
+        <div class="form-box">
+          <label class="form-label">NGO NAME</label>
+          <input type="text" id="ngo-form-name" class="input-brutal mono" placeholder="e.g. Vandrevala Foundation">
+        </div>
+
+        <div class="form-box">
+          <label class="form-label">DESCRIPTION</label>
+          <textarea id="ngo-form-desc" class="input-brutal mono" style="min-height: 80px;" placeholder="What support do they provide?"></textarea>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+           <div class="form-box">
+             <label class="form-label">PHONE / HELPLINE</label>
+             <input type="text" id="ngo-form-phone" class="input-brutal mono" placeholder="+91 XXXX XXXX">
+           </div>
+           <div class="form-box">
+             <label class="form-label">TIMING</label>
+             <input type="text" id="ngo-form-timing" class="input-brutal mono" placeholder="e.g. 24/7 or 9AM-5PM">
+           </div>
+        </div>
+
+        <div class="form-box">
+          <label class="form-label">WEBSITE URL</label>
+          <input type="url" id="ngo-form-website" class="input-brutal mono" placeholder="https://...">
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+           <div class="form-box">
+             <label class="form-label">CATEGORY</label>
+             <select id="ngo-form-category" class="input-brutal mono">
+               <option value="mental_health">Mental Health</option>
+               <option value="emergency">Emergency Crisis</option>
+               <option value="counselling">Counselling</option>
+               <option value="awareness">Awareness</option>
+             </select>
+           </div>
+           <div class="form-box">
+             <label class="form-label">EMERGENCY HELPLINE?</label>
+             <select id="ngo-form-ishelpline" class="input-brutal mono">
+               <option value="true">YES (🔴 Show at Top)</option>
+               <option value="false">NO (Regular Resource)</option>
+             </select>
+           </div>
+        </div>
+
+        <div class="form-box">
+          <label class="form-label">LANGUAGES (Comma separated)</label>
+          <input type="text" id="ngo-form-languages" class="input-brutal mono" placeholder="English, Hindi, Marathi">
+        </div>
+
+        <button id="ngo-btn-submit" class="btn btn-primary" style="width: 100%; padding: 15px; font-size: 14px; margin-top: 10px;">SAVE RESOURCE 💾</button>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- LIBS -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <script type="module" src="js/ngo-hub.js"></script>
+  <script type="module" src="js/ngo-hub-extended.js"></script>
+  <script type="module" src="js/ngo-charts.js"></script>
+  <script type="module" src="js/ngo-map.js"></script>
+  <script type="module" src="js/ngo-directory.js"></script>
+  <script type="module" src="js/nyx-ai.js"></script>
+  <script type="module" src="js/app.js"></script>
+  <script type="module" src="js/overview.js"></script>
+  <script type="module" src="js/chat.js"></script>
+</body>
+</html>
